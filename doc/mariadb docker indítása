@@ -1,0 +1,1 @@
+docker run -d -e MYSQL_DATABASE=pdc -e MYSQL_USER=pdc -e MYSQL_PASSWORD=pdc -e MYSQL_ALLOW_EMPTY_PASSWORD="yes" -p 3307:3306 --name pdc-db mariadb

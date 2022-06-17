@@ -1,0 +1,590 @@
+[
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "101",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Szövéshiba, repasszírozható"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "102",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Szövéshiba, nem repasszírozható"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "103",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Lyuk"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "104",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Szennyeződés"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "105",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Olajfolt"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "106",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Szálhúzódás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "107",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Gyűrődés/karcolás pl. Nicki"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "108",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Kellékhiba (csipke, cipzár, gomb, motívum...)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "109",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Nyomott anyag nyomáshiba"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "110",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Középtörés"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "111",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Szálvékonyodás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "112",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Szálvastagodás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "113",
+    "fehlerGruppeId": "ANYAG",
+    "abfallText": "Színárnyalat"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "130",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Nyomás szita, digitális hibák"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "131",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Hímzéshibák"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "132",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Transzfer motívumhiba préselés miatt(hibás motívum, keret látható, lejön)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "133",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Terítéshiba (színe/visszája,simulás, lapszám, feszes,csikos/kockás passzítás)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "134",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Vágáshiba(túlvágás,hibás szél,rossz rajz,becsípés mélység,csíkos/kockás passz.)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "135",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Préselési hiba(pontatlan,rossz oldal,nem ragad,szennyeződés a két réteg között)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "136",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Pánthiba (szélesség nem megfelelő, hajtásos)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "137",
+    "fehlerGruppeId": "SZABÁS",
+    "abfallText": "Kötegeléshiba (méret, alkatrész)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "150",
+    "fehlerGruppeId": "VARRÁS",
+    "abfallText": "Gépbeállítás (öltéssűrűség, kihagy, feszesség)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "151",
+    "fehlerGruppeId": "VARRÁS",
+    "abfallText": "Tűtörés (lyukadás varrat helyén)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "152",
+    "fehlerGruppeId": "VARRÁS",
+    "abfallText": "Varrat illesztés pontatlan (varratkereszteződés, varratvég)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "153",
+    "fehlerGruppeId": "VARRÁS",
+    "abfallText": "Ráncos, görbe varratok"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "154",
+    "fehlerGruppeId": "VARRÁS",
+    "abfallText": "Lyukas varratok"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "155",
+    "fehlerGruppeId": "VARRÁS",
+    "abfallText": "Lemaradt varrat"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "156",
+    "fehlerGruppeId": "VARRÁS",
+    "abfallText": "Rácsípés, ráhajtás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "160",
+    "fehlerGruppeId": "VASALÓ",
+    "abfallText": "Fényesedés,lenyomás,átnyomodott varrat,rávasalás,gyűrődés,kinyújtás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "170",
+    "fehlerGruppeId": "CSOMAG",
+    "abfallText": "Nem megfelelő csomagolás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "180",
+    "fehlerGruppeId": "GYÁRT",
+    "abfallText": "Nem megfelelő anyag/kellék/címke felhasználás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "181",
+    "fehlerGruppeId": "GYÁRT",
+    "abfallText": "Mintadarab, technikai leírástól eltérő kidolgozás"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "182",
+    "fehlerGruppeId": "GYÁRT",
+    "abfallText": "Mérethiba (szabásmintahiba, méretnek nem megfelelő)"
+  },
+  {
+    "firmaId": 5,
+    "prodstufeId": 50,
+    "abfallId": "183",
+    "fehlerGruppeId": "GYÁRT",
+    "abfallText": "Mennyiségi eltérés"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 0,
+    "abfallId": "100",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Wirkabfall"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 70,
+    "abfallId": "101",
+    "fehlerGruppeId": "",
+    "abfallText": "Kaschierstreifen"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 85,
+    "abfallId": "1",
+    "fehlerGruppeId": "",
+    "abfallText": "Test"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "122",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Ragasztó foltok - Rökona által okozott szennyeződés laminálás során"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "202",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Szallítás során nyomódott, sérült"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "203",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Rozsdás foltok"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "209",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Olajos foltok, Rökona által okozott koszos szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "252",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Megnyúlt szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "253",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Zsugorodott szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "261",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Gyűrődés (feltekercselésből, tekercs elején, végén, közepén)"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "269",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Bogarak"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "272",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Szállítás során nyomódott anyag"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "275",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Nem megfelelő vágás anyagszerkezet miatt"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "280",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Rökona által jelölt anyaghibák"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "303",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Csíkos ---hosszirányban"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "305",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Gubanc, kihúzott cérna"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "306",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Kötés-, anygahiba"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "315",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Tűhibás"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "318",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Dupla szál (vastagodás)"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "322",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Hiányzó, vagy vékony szál"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "324",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "hullámos anyag"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "326",
+    "fehlerGruppeId": "RÖKONA",
+    "abfallText": "Csíkos ---keresztirányban"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "329",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Gyűrődés"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "340",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Göb, csomó"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "505",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Fehér színű pötty"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "509",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Puller / Scratch  (húzás/karcolás)"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "511",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Szálferdeség"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "518",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Stenter keret megállásának jelei"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "526",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Ferde csík"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "541",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Fekete színű pötty"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "543",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Hullámos (anyag)"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "605",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Kék, piros, zöld színű pötty"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "611",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Márványos"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "615",
+    "fehlerGruppeId": "RöKONA",
+    "abfallText": "Szín NOK"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "700",
+    "fehlerGruppeId": "FIKTIV",
+    "abfallText": "Utolsó szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "801",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "0-2 mm-rel rövidebb szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "802",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "3-5 mm-rel rövidebb szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "803",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Több, mint 5 mm-rel rövidebb szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "804",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "0-2 mm-rel nagyobb szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "805",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "3-5 mm-rel nagyobb szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "806",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Több, mint 5 mm-rel nagyobb szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "807",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Ferde szabvány (nem párhuzamos és/vagy merőleges)"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "808",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Sarok résznél \"V\" alakú bevágás"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "809",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Előírástól eltérő terítés"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "810",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Nem megfelelő szabványszél (pl. hullámos)"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "811",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Becsípés nem megfelelő"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "812",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Koszos szabvány"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "813",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "(Lézer)vágás okozta \"cikk-cakkos\" és/vagy égett anyagszél"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "814",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Kezelésből adódó törés"
+  },
+  {
+    "firmaId": 2,
+    "prodstufeId": 90,
+    "abfallId": "815",
+    "fehlerGruppeId": "KFT",
+    "abfallText": "Gyűrődés (pl. hőkemence, kezelés)"
+  }
+]

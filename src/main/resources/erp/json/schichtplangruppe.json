@@ -1,0 +1,308 @@
+[
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 250,
+    "schichtplangruppeBez": "Teszt"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1110,
+    "schichtplangruppeBez": "Szabászat"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1120,
+    "schichtplangruppeBez": "Varroda"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1121,
+    "schichtplangruppeBez": "Marc Cain2"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1123,
+    "schichtplangruppeBez": "Huszárné"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1125,
+    "schichtplangruppeBez": "Tóth"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1127,
+    "schichtplangruppeBez": "Rövid varratú gépek (gomblyuk, gomb, retesz)"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1128,
+    "schichtplangruppeBez": "Inoka"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1129,
+    "schichtplangruppeBez": "Szlamáné"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1130,
+    "schichtplangruppeBez": "Minőség ellenőrzés, vasalás"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1141,
+    "schichtplangruppeBez": "Titkos&Jäger Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1142,
+    "schichtplangruppeBez": "NG Tex"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1143,
+    "schichtplangruppeBez": "F6 Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1145,
+    "schichtplangruppeBez": "Micona Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1146,
+    "schichtplangruppeBez": "YOU TEXTILE SRl"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1147,
+    "schichtplangruppeBez": "Axamo Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1148,
+    "schichtplangruppeBez": "Szirén Kft."
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1149,
+    "schichtplangruppeBez": "Rehabil Kft."
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1150,
+    "schichtplangruppeBez": "Pronabel Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1151,
+    "schichtplangruppeBez": "Mey Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1152,
+    "schichtplangruppeBez": "Kalocsa"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1153,
+    "schichtplangruppeBez": "Contact N Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1154,
+    "schichtplangruppeBez": "Elastic'91"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1155,
+    "schichtplangruppeBez": "Felina Kft."
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1156,
+    "schichtplangruppeBez": "Gold Consulting Szociális Szövetkezet"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1157,
+    "schichtplangruppeBez": "VIS Konfekcija Budinscina"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1158,
+    "schichtplangruppeBez": "Nyírgestum Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1159,
+    "schichtplangruppeBez": "Prince Oliver Bt"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1160,
+    "schichtplangruppeBez": "Umato"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1161,
+    "schichtplangruppeBez": "Zoltechtext Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1162,
+    "schichtplangruppeBez": "Pemont"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1163,
+    "schichtplangruppeBez": "NG-Caracal"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1164,
+    "schichtplangruppeBez": "Jelmez Art"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1165,
+    "schichtplangruppeBez": "Teljes életért Nonproit"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1166,
+    "schichtplangruppeBez": "Est Campany"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1167,
+    "schichtplangruppeBez": "Body Fashion Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1168,
+    "schichtplangruppeBez": "Gemtex a.s"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1169,
+    "schichtplangruppeBez": "Príma Dressz Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1170,
+    "schichtplangruppeBez": "Priméria Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1171,
+    "schichtplangruppeBez": "Termintex Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1172,
+    "schichtplangruppeBez": "Primo Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1173,
+    "schichtplangruppeBez": "Rose Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1174,
+    "schichtplangruppeBez": "Kunszöv Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1175,
+    "schichtplangruppeBez": "Békéstex Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1176,
+    "schichtplangruppeBez": "ECOfix Bau Kft Karcag"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1178,
+    "schichtplangruppeBez": "Innowear Tex Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1179,
+    "schichtplangruppeBez": "Baja-Horváth Péter Sándorné"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1180,
+    "schichtplangruppeBez": "Ariun Kft"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1181,
+    "schichtplangruppeBez": "Kalocsa-Kárász László Csaba Ev"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1190,
+    "schichtplangruppeBez": "Miskolci"
+  },
+  {
+    "firmaId": 5,
+    "bereichId": 0,
+    "schichtplangruppeId": 1200,
+    "schichtplangruppeBez": "Lézer szabás"
+  }
+]
