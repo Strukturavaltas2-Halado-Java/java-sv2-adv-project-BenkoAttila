@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pdc.dtos.PersonalDTO;
 import pdc.erp.persistence.ErpPersonalRepositoryDouble;
 import pdc.model.ErpTransfer;
 import pdc.repositories.ErpTransferRepository;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ErpServiceIT {
     @Autowired
-    pdc.failures.ErpService service;
+    ErpService service;
 
     @Autowired
     ErpTransferRepository erpTransferRepository;
@@ -28,6 +29,11 @@ class ErpServiceIT {
     }
 
 
+    @Test
+    void testTransferDataFromErp() {
+        //manuális adatbázis feltöltés tesztelés
+        service.transferDataFromErp();
+    }
     @Test
     void testCreateAndCloseTransfer() {
         ErpTransfer erpTransfer = service.createTransfer(LocalDateTime.now());
@@ -96,4 +102,11 @@ class ErpServiceIT {
         service.createTransfer(LocalDateTime.now().minusMinutes(1));
         assertFalse(service.shouldStartTransfer());
     }
+
+    @Test
+    void testListAllActiveEmployees() {
+        List<PersonalDTO> list = service.listAllActiveEmployees(5);
+        assertThat(list).hasSize(ErpPersonalRepositoryDouble.GENERATED_NAMES_COUNT - ErpPersonalRepositoryDouble.INACTIVE_COUNT);
+    }
+
 }

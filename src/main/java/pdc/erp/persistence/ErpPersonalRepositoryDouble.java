@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class ErpPersonalRepositoryDouble {
             String[] parts = s.split(" ");
             return parts[1];
         }).toList();
-        return Stream.iterate(100,i -> i+1 )
+        return Stream.iterate(100,integer -> integer+1 )
         .limit(GENERATED_NAMES_COUNT)
                 .map(i-> generatePersonal(firmaId, i));
     }

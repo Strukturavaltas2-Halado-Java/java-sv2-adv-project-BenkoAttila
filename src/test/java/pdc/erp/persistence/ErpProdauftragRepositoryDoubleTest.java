@@ -18,7 +18,7 @@ class ErpProdauftragRepositoryDoubleTest {
     void testFindAll() throws JsonProcessingException {
         List<Prodauftrag> actual = repository.findAll()
                 .collect(Collectors.toList());
-        assertEquals(888, actual.size());
+        assertEquals(599, actual.size());
 //        ObjectMapper mapper = JsonMapper.builder()
 //                .addModule(new JavaTimeModule())
 //                .build();

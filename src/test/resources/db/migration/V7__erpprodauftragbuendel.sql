@@ -1,0 +1,2 @@
+create table erpprodauftragbuendels (id bigint not null auto_increment, buendel_id integer not null, buendelgruppe_id varchar(255), karton_nr_id integer not null, stueck_nr integer not null, stueck_teilung integer not null, firma_id integer, pa_nr_id integer, prodstufe_id integer, primary key (id)) engine=InnoDB;
+alter table erpprodauftragbuendels add constraint FKebb96i97hnaemdpof2tiyqroy foreign key (firma_id, prodstufe_id, pa_nr_id) references erpprodauftragen;
