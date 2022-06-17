@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -35,18 +34,18 @@ public class ErpPersonalRepositoryDouble {
                         .replace("Prof.", "")
                         .replace("Dr.", "")
                         .trim())
-                .collect(Collectors.toList());
+                .toList();
         vezeteknevek = names.stream().map(s -> {
             String[] parts = s.split(" ");
             return parts[0];
-        }).collect(Collectors.toList());
+        }).toList();
         keresztnevek = names.stream().map(s -> {
             String[] parts = s.split(" ");
             return parts[1];
-        }).collect(Collectors.toList());
+        }).toList();
         return Stream.iterate(100,i -> i+1 )
         .limit(GENERATED_NAMES_COUNT)
-                .map(i-> generatePersonal(5, i));
+                .map(i-> generatePersonal(firmaId, i));
     }
 
     private Personal generatePersonal(int firmaId, int i) {
