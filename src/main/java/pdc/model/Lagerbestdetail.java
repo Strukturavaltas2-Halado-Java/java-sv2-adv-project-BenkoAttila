@@ -10,17 +10,14 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "erplagerbestdetails")
+@Table(name = "erplagerbestdetails", indexes = @Index(name= "by_stueck_nr", columnList = "stueck_nr,stueck_teilung"))
 public class Lagerbestdetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "firma_id")
-    private int firmaId;
-    @Column(name = "prodstufe_id")
-    private int prodstufeId;
-    @Column(name = "pa_nr_id")
-    private int paNrId;
+    @ManyToOne
+    @JoinColumn(name="prodauftrag_id")
+    private Prodauftrag prodauftrag;
     @Column(name = "stueck_nr")
     private int stueckNr;
     @Column(name = "stueck_teilung")

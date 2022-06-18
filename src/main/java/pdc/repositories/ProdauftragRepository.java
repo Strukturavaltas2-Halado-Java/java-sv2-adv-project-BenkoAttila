@@ -9,9 +9,10 @@ import pdc.model.ProdauftragId;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface ProdauftragRepository extends JpaRepository<Prodauftrag, ProdauftragId> {
+public interface ProdauftragRepository extends JpaRepository<Prodauftrag, Long> {
     @Modifying
     @Transactional
     @Query(value="update erpprodauftragen set aktiv = 0", nativeQuery= true)
@@ -20,4 +21,11 @@ public interface ProdauftragRepository extends JpaRepository<Prodauftrag, Prodau
     List<Prodauftrag> listAllActiveWorkorders(int firmaId);
     @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and aktiv=1")
     List<Prodauftrag> listAllActiveWorkorders(int firmaId, int prodstufeId);
+
+    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
+    Optional<Prodauftrag> findByFirmaIdAndProdstufeIdAndPaNrId(int firmaId, int prodstufeId, int paNrId);
+
+    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId and aktiv=1")
+    Optional<Prodauftrag> findByFirmaIdAndProdstufeIdAndPaNrIdWithAktivTrue(int firmaId, int prodstufeId, int paNrId);
+
 }

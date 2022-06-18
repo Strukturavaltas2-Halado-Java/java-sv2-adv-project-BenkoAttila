@@ -3,6 +3,7 @@ package pdc.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -10,12 +11,20 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "erpprodauftragen")
+@ToString
+@Table(name = "erpprodauftragen", indexes = @Index(name= "erppk", columnList = "firma_id,prodstufe_id,pa_nr_id"))
 public class Prodauftrag {
-    @EmbeddedId
-    private ProdauftragId id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "firma_id", nullable = false)
+    private Integer firmaId;
+    @Column(name = "prodstufe_id", nullable = false)
+    private Integer prodstufeId;
+    @Column(name = "pa_nr_id", nullable = false)
+    private Integer paNrId;
     private boolean aktiv;
-            private double menge;
+    private double menge;
     @Column(name = "artikel_id")
     private String artikelId;
     @Column(name = "groesse_id")
@@ -29,7 +38,9 @@ public class Prodauftrag {
     @Column(name = "kennz_partiewechsel")
     private String kennzPartiewechsel;
 
-    public Prodauftrag(ProdauftragId id) {
-        this.id = id;
+    public Prodauftrag(Integer firmaId, Integer prodstufeId, Integer paNrId) {
+        this.firmaId = firmaId;
+        this.prodstufeId = prodstufeId;
+        this.paNrId = paNrId;
     }
 }

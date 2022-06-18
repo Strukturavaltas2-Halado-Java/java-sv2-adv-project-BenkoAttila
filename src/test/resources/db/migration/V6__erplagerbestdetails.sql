@@ -1,9 +1,7 @@
 CREATE TABLE erplagerbestdetails
 (
    id                    BIGINT AUTO_INCREMENT NOT NULL,
-   firma_id              INT           DEFAULT 0 NOT NULL,
-   prodstufe_id          INT,
-   pa_nr_id              INT,
+   prodauftrag_id        BIGINT,
    stueck_nr             INT           DEFAULT 0 NOT NULL,
    stueck_teilung        INT           DEFAULT 0 NOT NULL,
    artikel_id            VARCHAR(30),
@@ -16,3 +14,4 @@ CREATE TABLE erplagerbestdetails
 
 CREATE INDEX erplagerbestdetails1
   ON erplagerbestdetails (stueck_nr, stueck_teilung);
+alter table erplagerbestdetails add constraint FKhnhv8pabncnbec201m19fpa8n foreign key (prodauftrag_id) references erpprodauftragen (id);

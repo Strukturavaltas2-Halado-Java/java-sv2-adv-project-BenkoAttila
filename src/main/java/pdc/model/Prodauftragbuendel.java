@@ -12,10 +12,7 @@ public class Prodauftragbuendel {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private long id;
    @ManyToOne
-   @JoinColumns({
-           @JoinColumn(name = "firma_id", referencedColumnName = "firma_id"),
-           @JoinColumn(name = "prodstufe_id", referencedColumnName = "prodstufe_id"),
-           @JoinColumn(name = "pa_nr_id", referencedColumnName = "pa_nr_id")})
+   @JoinColumn(name = "prodauftrag_id")
    private Prodauftrag prodauftrag;
    private int buendelId;
    private int kartonNrId;

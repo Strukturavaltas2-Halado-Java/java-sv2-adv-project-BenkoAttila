@@ -11,4 +11,5 @@ public class Abfallcode {
     private String abfallId;
     private String fehlerGruppeId;
     private String abfallText;
+    private boolean aktiv;
 }

@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pdc.dtos.PersonalDTO;
+import pdc.dtos.*;
+import pdc.model.*;
 import pdc.erp.persistence.ErpPersonalRepositoryDouble;
-import pdc.model.ErpTransfer;
-import pdc.repositories.ErpTransferRepository;
+import pdc.repositories.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class ErpServiceIT {
+class ErpServiceIntegrationTest {
     @Autowired
     ErpService service;
 
@@ -28,12 +28,6 @@ class ErpServiceIT {
         service.deleteAllTransfers();
     }
 
-
-    @Test
-    void testTransferDataFromErp() {
-        //manuális adatbázis feltöltés tesztelés
-        service.transferDataFromErp();
-    }
     @Test
     void testCreateAndCloseTransfer() {
         ErpTransfer erpTransfer = service.createTransfer(LocalDateTime.now());
@@ -104,9 +98,39 @@ class ErpServiceIT {
     }
 
     @Test
-    void testListAllActiveEmployees() {
+    void testTransferAndListAllActiveEmployees() {
+        service.cleanErpData();
+        service.transferDataFromErp();
         List<PersonalDTO> list = service.listAllActiveEmployees(5);
         assertThat(list).hasSize(ErpPersonalRepositoryDouble.GENERATED_NAMES_COUNT - ErpPersonalRepositoryDouble.INACTIVE_COUNT);
+    }
+
+    @Test
+    void testTransferAndListAllActiveAbfallcodes() {
+        service.cleanErpData();
+        service.transferDataFromErp();
+        List<AbfallcodeDTO> list2 = service.listAllfailureCodes(2);
+        List<AbfallcodeDTO> list5 = service.listAllfailureCodes(5);
+        assertEquals(50, list2.size());
+        assertEquals(34, list5.size());
+    }
+
+    @Test
+    void testTransferAndListAllActiveProdauftrag() {
+        service.cleanErpData();
+        service.transferDataFromErp();
+        List<ProdauftragDTO> list2 = service.listAllActiveWorkorders(2);
+        List<ProdauftragDTO> list5 = service.listAllActiveWorkorders(5);
+        assertEquals(155, list2.size());
+        assertEquals(374, list5.size());
+    }
+
+    @Test
+    void testTransferAndListAllActiveSchichtplangruppe() {
+        service.cleanErpData();
+        service.transferDataFromErp();
+        List<SchichtplangruppeDTO> list5 = service.listAllActiveWorkgroups(5);
+        assertEquals(51, list5.size());
     }
 
 }

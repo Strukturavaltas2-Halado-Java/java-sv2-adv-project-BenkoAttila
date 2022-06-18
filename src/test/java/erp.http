@@ -1,0 +1,3 @@
+GET localhost:8080/api/erp/2/master-files/failure-codes
+GET localhost:8080/api/erp/5/master-files/failure-codes
+

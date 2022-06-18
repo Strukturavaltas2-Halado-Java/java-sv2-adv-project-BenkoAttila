@@ -1,5 +1,6 @@
 package pdc.failures;
 
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import pdc.dtos.*;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class ErpController {
     private final ErpService service;
     private final ModelMapper modelMapper;
     @GetMapping("/{firmaId}/master-files/failure-codes")
-    public List<AbfallCodeDTO> listAllfailureCodes(@PathVariable int firmaId) {
+    public List<AbfallcodeDTO> listAllfailureCodes(@PathVariable int firmaId) {
         service.transferDataFromErp();
         return service.listAllActivefailurecodes(firmaId);
     }
@@ -44,11 +45,13 @@ public class ErpController {
 
     @GetMapping
     public List<ErpTransferDTO> listAllErpTransfers() {
+        service.transferDataFromErp();
         return service.listAllErpTransfers();
     }
 
     @DeleteMapping
     public void deleteAllERPTransfers() {
         service.deleteAllTransfers();
+        service.transferDataFromErp();
     }
 }

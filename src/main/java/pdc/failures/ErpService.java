@@ -3,6 +3,7 @@ package pdc.failures;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import pdc.dtos.*;
 import pdc.erp.persistence.*;
@@ -13,7 +14,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -41,9 +41,8 @@ public class ErpService {
 
     private final ProdauftragbuendelRepository prodauftragbuendelRepository;
 
-    public List<AbfallCodeDTO> listAllfailureCodes(int companyId) {
-        transferDataFromErp();
-        return erpAbfallcodeRepository.findAll().filter(abfallcode -> abfallcode.getFirmaId() == companyId).map(abfallcode -> modelMapper.map(abfallcode, AbfallCodeDTO.class)).toList();
+    public List<AbfallcodeDTO> listAllfailureCodes(int companyId) {
+        return erpAbfallcodeRepository.findAll().filter(abfallcode -> abfallcode.getFirmaId() == companyId).map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDTO.class)).toList();
     }
 
     public List<ErpTransferDTO> listAllErpTransfers() {
@@ -55,7 +54,6 @@ public class ErpService {
         if (shouldStartTransfer()) {
             ErpTransfer saved = erpTransferRepository.save(new ErpTransfer(LocalDateTime.now()));
             currentTransferId = saved.getId();
-            System.out.println(currentTransferId);
         }
         if (currentTransferId != null) {
             saveErpData(currentTransferId);
@@ -107,12 +105,12 @@ public class ErpService {
     @Transactional
     private void saveErpData(Integer currentTransferId) {
         cleanErpData();
-        saveAbfallCodes();
-        saveLagerbest();
-        savePersonal();
-        saveSchichtlplangruppe();
-        saveProdauftrag();
-        saveProdauftragbuendel();
+        saveAbfallCodeFromErp();
+        saveProdauftragFromErp();
+        savePersonalFromErp();
+        saveSchichtlplangruppeFromErp();
+        saveLagerbestFromErp();
+        saveProdauftragbuendelFromErp();
         if (currentTransferId != null) {
             closeTransferById(currentTransferId);
         }
@@ -136,12 +134,21 @@ public class ErpService {
         schichtplangruppeRepository.inactivateAll();
     }
 
-    private void saveProdauftrag() {
+    private void saveProdauftragFromErp() {
         List<pdc.erp.model.Prodauftrag> list = erpProdauftragRepositoryDouble.findAll().toList();
         for (pdc.erp.model.Prodauftrag actual : list) {
-            Prodauftrag prodauftrag = new Prodauftrag(new ProdauftragId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId()));
+            Prodauftrag prodauftrag = null;
+            System.out.println(actual);
+            Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
+            if (optionalProdauftrag.isEmpty()) {
+                prodauftrag = new pdc.model.Prodauftrag(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
+                System.out.println("found:" + prodauftrag.toString());
+            } else {
+                System.out.println("not found:" + actual.toString());
+                prodauftrag = optionalProdauftrag.get();
+            }
             prodauftrag.setArtikelId(actual.getProdauftragartikel().getArtikelId());
-            prodauftrag.setAktiv(true);
+            prodauftrag.setAktiv(actual.isAktiv());
             prodauftrag.setFarbeId(actual.getProdauftragartikel().getFarbeId());
             prodauftrag.setFertigungszustandId(actual.getProdauftragartikel().getFertigungszustandId());
             prodauftrag.setVarianteId(actual.getProdauftragartikel().getVarianteId());
@@ -153,12 +160,11 @@ public class ErpService {
     }
 
 
-    private void saveProdauftragbuendel() {
+    private void saveProdauftragbuendelFromErp() {
         int count = 0;
         List<pdc.erp.model.Prodauftragbuendel> list = erpProdauftragbuendelRepositoryDouble.findAll().toList();
         for (pdc.erp.model.Prodauftragbuendel actual : list) {
-            ProdauftragId prodauftragId = new ProdauftragId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
-            Optional<Prodauftrag> prodauftrag = prodauftragRepository.findById(prodauftragId);
+            Optional<Prodauftrag> prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             if (prodauftrag.isPresent()) {
                 Prodauftragbuendel prodauftragbuendel = new Prodauftragbuendel();
                 prodauftragbuendel.setProdauftrag(prodauftrag.get());
@@ -171,10 +177,16 @@ public class ErpService {
         }
     }
 
-    private void saveSchichtlplangruppe() {
+    private void saveSchichtlplangruppeFromErp() {
         List<pdc.erp.model.Schichtplangruppe> list = erpSchichtplangruppeRepositoryDouble.findAll(5).toList();
         for (pdc.erp.model.Schichtplangruppe actual : list) {
-            Schichtplangruppe schichtplangruppe = new Schichtplangruppe(actual.getSchichtplangruppeId());
+            Schichtplangruppe schichtplangruppe;
+            Optional<Schichtplangruppe> optionalSchichtplangruppe = schichtplangruppeRepository.findById(actual.getSchichtplangruppeId());
+            if (optionalSchichtplangruppe.isPresent()) {
+                schichtplangruppe = optionalSchichtplangruppe.get();
+            } else {
+                schichtplangruppe = new Schichtplangruppe(actual.getSchichtplangruppeId());
+            }
             schichtplangruppe.setAktiv(true);
             schichtplangruppe.setFirmaId(actual.getFirmaId());
             schichtplangruppe.setSchichtplangruppeBez(actual.getSchichtplangruppeBez());
@@ -186,7 +198,7 @@ public class ErpService {
         personalRepository.inactivateAll();
     }
 
-    private void savePersonal() {
+    private void savePersonalFromErp() {
         List<pdc.erp.model.Personal> list = erpPersonalRepositoryDouble.findAll(5).toList();
         Personal personal;
         for (pdc.erp.model.Personal actual : list) {
@@ -207,18 +219,19 @@ public class ErpService {
 
     }
 
-    private void saveLagerbest() {
+    private void saveLagerbestFromErp() {
         List<pdc.erp.model.Lagerbestdetail> list = erpLagerbestRepository.findAllDetail().toList();
         for (pdc.erp.model.Lagerbestdetail actual : list) {
-            Lagerbestdetail lbdetail = new Lagerbestdetail(actual.getStueckNr(), actual.getStueckTeilung());
-            lbdetail.setFirmaId(actual.getLagerbestglobal().getFirmaId());
-            lbdetail.setProdstufeId(actual.getProdstufeId());
-            lbdetail.setPaNrId(actual.getPaNrId());
-            lbdetail.setArtikelId(actual.getLagerbestglobal().getArtikelId());
-            lbdetail.setFarbeId(actual.getLagerbestglobal().getFarbeId());
-            lbdetail.setVarianteId(actual.getLagerbestglobal().getVarianteId());
-            lbdetail.setFertigungszustandId(actual.getLagerbestglobal().getFertigungszustandId());
-            lagerbestRepository.save(lbdetail);
+            Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(actual.getLagerbestglobal().getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
+            if (optionalProdauftrag.isPresent()) {
+                Lagerbestdetail lbdetail = new Lagerbestdetail(actual.getStueckNr(), actual.getStueckTeilung());
+                lbdetail.setProdauftrag(optionalProdauftrag.get());
+                lbdetail.setArtikelId(actual.getLagerbestglobal().getArtikelId());
+                lbdetail.setFarbeId(actual.getLagerbestglobal().getFarbeId());
+                lbdetail.setVarianteId(actual.getLagerbestglobal().getVarianteId());
+                lbdetail.setFertigungszustandId(actual.getLagerbestglobal().getFertigungszustandId());
+                lagerbestRepository.save(lbdetail);
+            }
         }
     }
 
@@ -226,22 +239,27 @@ public class ErpService {
         abfallcodeRepository.inactivateAll();
     }
 
-    private void saveAbfallCodes() {
+    private void saveAbfallCodeFromErp() {
         List<pdc.erp.model.Abfallcode> list = erpAbfallcodeRepository.findAll().toList();
         for (pdc.erp.model.Abfallcode actual : list) {
-            AbfallcodeId id = new AbfallcodeId(actual.getFirmaId(), actual.getProdstufeId(), actual.getAbfallId());
-            Abfallcode abfallcode = new Abfallcode();
-            abfallcode.setId(id);
+            Abfallcode abfallcode;
+            Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallId(actual.getFirmaId(), actual.getProdstufeId(), actual.getAbfallId());
+            if (optionalAbfallcode.isPresent()) {
+                abfallcode = optionalAbfallcode.get();
+            } else {
+                abfallcode = new Abfallcode(actual.getFirmaId(), actual.getProdstufeId(), actual.getAbfallId());
+            }
+            abfallcode.setAktiv(true);
             abfallcode.setFehlerGruppeId(actual.getFehlerGruppeId());
             abfallcode.setAbfallText(actual.getAbfallText());
             abfallcodeRepository.save(abfallcode);
         }
     }
 
-    public List<AbfallCodeDTO> listAllActivefailurecodes(int firmaId) {
+    public List<AbfallcodeDTO> listAllActivefailurecodes(int firmaId) {
         return abfallcodeRepository.findByFirmaWithAktivTrue(firmaId)
                 .stream()
-                .map(abfallcode -> modelMapper.map(abfallcode, AbfallCodeDTO.class))
+                .map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDTO.class))
                 .toList();
     }
 

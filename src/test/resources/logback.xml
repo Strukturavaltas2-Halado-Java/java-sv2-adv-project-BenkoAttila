@@ -10,4 +10,5 @@
     </root>
 
     <logger name="org.flywaydb" level="error" />
+    <logger name="org.hibernate" level="info" />
 </configuration>
