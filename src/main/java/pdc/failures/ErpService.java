@@ -3,20 +3,25 @@ package pdc.failures;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import pdc.dtos.*;
 import pdc.erp.persistence.*;
+import pdc.failures.exceptions.ProdauftragNotFoundException;
 import pdc.model.*;
 import pdc.repositories.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+
 @Service
+@Validated
+@RequiredArgsConstructor
 public class ErpService {
     private static final int WAIT_BEFORE_NEW_COPY = 90;
     private static final int COPY_TIMEOUT = 5;
@@ -41,6 +46,7 @@ public class ErpService {
 
     private final ProdauftragbuendelRepository prodauftragbuendelRepository;
 
+
     public List<AbfallcodeDTO> listAllfailureCodes(int companyId) {
         return erpAbfallcodeRepository.findAll().filter(abfallcode -> abfallcode.getFirmaId() == companyId).map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDTO.class)).toList();
     }
@@ -49,7 +55,7 @@ public class ErpService {
         return erpTransferRepository.findAll().stream().map(erpTransfer -> modelMapper.map(erpTransfer, ErpTransferDTO.class)).toList();
     }
 
-    void transferDataFromErp() {
+    public void transferDataFromErp() {
         Integer currentTransferId = null;
         if (shouldStartTransfer()) {
             ErpTransfer saved = erpTransferRepository.save(new ErpTransfer(LocalDateTime.now()));
@@ -103,7 +109,7 @@ public class ErpService {
 
 
     @Transactional
-    private void saveErpData(Integer currentTransferId) {
+    public void saveErpData(Integer currentTransferId) {
         cleanErpData();
         saveAbfallCodeFromErp();
         saveProdauftragFromErp();
@@ -116,7 +122,7 @@ public class ErpService {
         }
     }
 
-
+    @Transactional
     public void cleanErpData() {
         inactivateAbfallCodes();
         inactivatePersonal();
@@ -134,17 +140,14 @@ public class ErpService {
         schichtplangruppeRepository.inactivateAll();
     }
 
-    private void saveProdauftragFromErp() {
+    void saveProdauftragFromErp() {
         List<pdc.erp.model.Prodauftrag> list = erpProdauftragRepositoryDouble.findAll().toList();
         for (pdc.erp.model.Prodauftrag actual : list) {
             Prodauftrag prodauftrag = null;
-            System.out.println(actual);
-            Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
+            Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             if (optionalProdauftrag.isEmpty()) {
                 prodauftrag = new pdc.model.Prodauftrag(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
-                System.out.println("found:" + prodauftrag.toString());
             } else {
-                System.out.println("not found:" + actual.toString());
                 prodauftrag = optionalProdauftrag.get();
             }
             prodauftrag.setArtikelId(actual.getProdauftragartikel().getArtikelId());
@@ -159,25 +162,28 @@ public class ErpService {
         }
     }
 
-
-    private void saveProdauftragbuendelFromErp() {
+@Transactional
+    public void saveProdauftragbuendelFromErp() {
         int count = 0;
         List<pdc.erp.model.Prodauftragbuendel> list = erpProdauftragbuendelRepositoryDouble.findAll().toList();
         for (pdc.erp.model.Prodauftragbuendel actual : list) {
             Optional<Prodauftrag> prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             if (prodauftrag.isPresent()) {
                 Prodauftragbuendel prodauftragbuendel = new Prodauftragbuendel();
+                prodauftragbuendel.setStapelId(actual.getStapelId());
                 prodauftragbuendel.setProdauftrag(prodauftrag.get());
                 prodauftragbuendel.setKartonNrId(actual.getKartonNrId());
                 prodauftragbuendel.setStueckNr(actual.getStueckNr());
                 prodauftragbuendel.setBuendelgruppeId(actual.getBuendelgruppeId());
                 prodauftragbuendel.setStueckTeilung(actual.getStueckTeilung());
                 prodauftragbuendelRepository.save(prodauftragbuendel);
+            } else {
+                throw new IllegalStateException(actual.toString());
             }
         }
     }
 
-    private void saveSchichtlplangruppeFromErp() {
+    void saveSchichtlplangruppeFromErp() {
         List<pdc.erp.model.Schichtplangruppe> list = erpSchichtplangruppeRepositoryDouble.findAll(5).toList();
         for (pdc.erp.model.Schichtplangruppe actual : list) {
             Schichtplangruppe schichtplangruppe;
@@ -194,34 +200,36 @@ public class ErpService {
         }
     }
 
-    private void inactivatePersonal() {
+    void inactivatePersonal() {
         personalRepository.inactivateAll();
     }
 
-    private void savePersonalFromErp() {
+    public void savePersonalFromErp() {
         List<pdc.erp.model.Personal> list = erpPersonalRepositoryDouble.findAll(5).toList();
-        Personal personal;
         for (pdc.erp.model.Personal actual : list) {
+            Personal personal;
             Optional<Personal> optionalPersonal = personalRepository.findById(actual.getPersonalId());
             if (optionalPersonal.isPresent()) {
                 personal = optionalPersonal.get();
                 personal.setFirmaId(actual.getFirmaId());
                 personal.setPersName(actual.getPersName());
-                personal.setDatumAustritt(actual.getDatumAustritt());
+                personal.setAktiv(actual.isAktiv());
+
             } else {
                 personal = new Personal(actual.getPersonalId());
                 personal.setFirmaId(actual.getFirmaId());
                 personal.setPersName(actual.getPersName());
-                personal.setDatumAustritt(actual.getDatumAustritt());
+                personal.setAktiv(actual.isAktiv());
+                personalRepository.save(personal);
             }
-            personalRepository.save(personal);
         }
-
     }
 
-    private void saveLagerbestFromErp() {
+
+    public void saveLagerbestFromErp() {
         List<pdc.erp.model.Lagerbestdetail> list = erpLagerbestRepository.findAllDetail().toList();
         for (pdc.erp.model.Lagerbestdetail actual : list) {
+            System.out.println(actual);
             Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(actual.getLagerbestglobal().getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             if (optionalProdauftrag.isPresent()) {
                 Lagerbestdetail lbdetail = new Lagerbestdetail(actual.getStueckNr(), actual.getStueckTeilung());
@@ -239,7 +247,7 @@ public class ErpService {
         abfallcodeRepository.inactivateAll();
     }
 
-    private void saveAbfallCodeFromErp() {
+    void saveAbfallCodeFromErp() {
         List<pdc.erp.model.Abfallcode> list = erpAbfallcodeRepository.findAll().toList();
         for (pdc.erp.model.Abfallcode actual : list) {
             Abfallcode abfallcode;
@@ -263,27 +271,59 @@ public class ErpService {
                 .toList();
     }
 
+
+
+
+    public List<ProdauftragDTO> listAllMatchingWorkorders(@Valid WorkOrderParams param) {
+        switch (param.getFilterType()) {
+            case BY_NR:
+                if (param.getPaNrId() > 0) {
+                    return prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId())
+                            .stream()
+                            .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
+                            .toList();
+                } else if (param.getProdstufeId() > 0) {
+                    return prodauftragRepository.findAllByFirmaIdAndProdstufeIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), true).stream()
+                            .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
+                            .toList();
+                } else {
+                    return prodauftragRepository.findAllActiveWorkordersByFirmaIdAndAktiv(param.getFirmaId(), true).stream()
+                            .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
+                            .toList();
+                }
+            case BY_BUENDEL:
+                List<Prodauftragbuendel> pabuendellist = prodauftragbuendelRepository.listaAllByStapelIdAndBuendel1AndBuendel2AndBuendel3(param.getStapelId(), param.getBuendel1(), param.getBuendel2(), param.getBuendel3());
+                return pabuendellist.stream()
+                        .filter(prodauftragbuendel -> prodauftragbuendel.getProdauftrag().getFirmaId() == param.getFirmaId())
+                        .map(Prodauftragbuendel::getProdauftrag).map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class)).toList();
+            case BY_STUECK_NR:
+                List<Lagerbestdetail> lbdlist = lagerbestRepository.findByStueckNrAndStueckTeilung(param.getStueckNr(), param.getStueckTeilung());
+                return lbdlist.stream()
+                        .map(Lagerbestdetail::getProdauftrag)
+                        .filter(Prodauftrag::isAktiv)
+                        .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class)).toList();
+            default:
+        }
+        return new ArrayList<>();
+    }
+
+    public ProdauftragDTO findWorkorder(@Valid WorkOrderParams param) {
+        Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId(), true);
+        if (optionalProdauftrag.isEmpty() || !optionalProdauftrag.get().isAktiv()) {
+            throw new ProdauftragNotFoundException(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId());
+        }
+        return modelMapper.map(optionalProdauftrag.get(), ProdauftragDTO.class);
+    }
+
     public List<PersonalDTO> listAllActiveEmployees(int firmaId) {
-        return personalRepository.listActiveEmployees(firmaId).stream()
-                .map(personal -> modelMapper.map(personal, PersonalDTO.class))
+        return personalRepository.findAllByFirmaId(firmaId).stream()
+                .map(sg -> modelMapper.map(sg, PersonalDTO.class))
                 .toList();
     }
 
     public List<SchichtplangruppeDTO> listAllActiveWorkgroups(int firmaId) {
-        return schichtplangruppeRepository.listAllActive(firmaId).stream()
+        return schichtplangruppeRepository.findAllByFirmaId(firmaId).stream()
                 .map(sg -> modelMapper.map(sg, SchichtplangruppeDTO.class))
-                .toList();
-    }
-
-    public List<ProdauftragDTO> listAllActiveWorkorders(int firmaId, int prodstufeId) {
-        return prodauftragRepository.listAllActiveWorkorders(firmaId, prodstufeId).stream()
-                .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
-                .toList();
-    }
-
-    public List<ProdauftragDTO> listAllActiveWorkorders(int firmaId) {
-        return prodauftragRepository.listAllActiveWorkorders(firmaId).stream()
-                .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
                 .toList();
     }
 }

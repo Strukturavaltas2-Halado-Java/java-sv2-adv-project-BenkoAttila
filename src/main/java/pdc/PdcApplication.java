@@ -12,8 +12,7 @@ public class PdcApplication {
     }
 
     @Bean
-    ModelMapper createModelMApper() {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper;
+    ModelMapper createModelMapper() {
+        return new ModelMapper();
     }
 }

@@ -15,59 +15,58 @@ import pdc.repositories.ProdauftragRepository;
 import pdc.repositories.SchichtplangruppeRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class FailuresService {
     private final ModelMapper modelMapper;
-    //private final failureRepository failureRepository;
+    private final failureRepository failureRepository;
     private final ProdauftragRepository prodauftragRepository;
     private final PersonalRepository personalRepository;
     private final AbfallcodeRepository abfallcodeRepository;
     private final SchichtplangruppeRepository schichtplangruppeRepository;
     @Transactional
     public FailureDTO createFailure(CreateFailureCommand command) {
-//        ProdauftragId prodauftragId = new ProdauftragId(command.getFirmaId(), command.getProdstufeId(), command.getPaNrId());
-//        Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findById(prodauftragId);
-//        if (optionalProdauftrag.isEmpty()) {
-//            throw new ProdauftragNotFoundException(prodauftragId);
-//        }
-//        Personal personalQc = findPersonal("personalQc", command.getPersonalQc());
-//        Personal personalQc2 = null;
-//        Personal personalId = null;
-//        Abfallcode abfallcode = findAbfallcode(command.getFirmaId(), command.getProdstufeId(), command.getAbfallId());
-//        if (command.getPersonalQc2() > 0) {
-//            personalQc2 = findPersonal("personalQc2", command.getPersonalQc2());
-//        }
-//        if (command.getPersonalId() > 0) {
-//            personalId = findPersonal("personalId", command.getPersonalId());
-//        }
-//        Failure failure = new Failure(optionalProdauftrag.get());
-//        failure.setAbfallcode(abfallcode);
-//        failure.setPersonalQc(personalQc);
-//        if (personalQc2 != null) {
-//            failure.setPersonalQc2(personalQc2);
-//        }
-//        if (personalId != null) {
-//            failure.setPersonal(personalId);
-//        }
-//        if (command.getSchichtplangruppeId() > 0) {
-//            Optional<Schichtplangruppe> optionalSchichtplangruppe = schichtplangruppeRepository.findById(command.getSchichtplangruppeId());
-//            if (optionalSchichtplangruppe.isEmpty()) {
-//                throw new SchichtplangruppeNotFoundException(command.getSchichtplangruppeId());
-//            }
-//            failure.setSchichtplangruppe(optionalSchichtplangruppe.get());
-//        }
-//        failure.setBuendelBc(command.getBuendelBc());
-//        failure.setTsErfassung(command.getTsErfassung());
-//        failure.setPruefung2(command.getPruefung2());
-//        failureRepository.save(failure);
-//        return modelMapper.map(failure, pdc.dtos.FailureDTO.class);
-        return null;
+        Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(command.getFirmaId(), command.getProdstufeId(), command.getPaNrId());
+        if (optionalProdauftrag.isEmpty() || !optionalProdauftrag.get().isAktiv()) {
+            throw new ProdauftragNotFoundException(command.getFirmaId(), command.getProdstufeId(), command.getPaNrId());
+        }
+        Personal personalQc = findPersonal("personalQc", command.getPersonalQc());
+        Personal personalQc2 = null;
+        Personal personalId = null;
+        Abfallcode abfallcode = findAbfallcode(command.getFirmaId(), command.getProdstufeId(), command.getAbfallId());
+        if (command.getPersonalQc2() > 0) {
+            personalQc2 = findPersonal("personalQc2", command.getPersonalQc2());
+        }
+        if (command.getPersonalId() > 0) {
+            personalId = findPersonal("personalId", command.getPersonalId());
+        }
+        Failure failure = new Failure(optionalProdauftrag.get());
+        failure.setAbfallcode(abfallcode);
+        failure.setPersonalQc(personalQc);
+        if (personalQc2 != null) {
+            failure.setPersonalQc2(personalQc2);
+        }
+        if (personalId != null) {
+            failure.setPersonal(personalId);
+        }
+        if (command.getSchichtplangruppeId() > 0) {
+            Optional<Schichtplangruppe> optionalSchichtplangruppe = schichtplangruppeRepository.findById(command.getSchichtplangruppeId());
+            if (optionalSchichtplangruppe.isEmpty()) {
+                throw new SchichtplangruppeNotFoundException(command.getSchichtplangruppeId());
+            }
+            failure.setSchichtplangruppe(optionalSchichtplangruppe.get());
+        }
+        failure.setBuendelBc(command.getBuendelBc());
+        failure.setTsErfassung(command.getTsErfassung());
+        failure.setPruefung2(command.getPruefung2());
+        failureRepository.save(failure);
+        return modelMapper.map(failure, pdc.dtos.FailureDTO.class);
     }
 
     private Abfallcode findAbfallcode(int firmaId, int prodstufeId, String abfallId) {
-        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdWithAktivTrue(firmaId, prodstufeId, abfallId);
+        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdWithAktiv(firmaId, prodstufeId, abfallId, true);
         if (optionalAbfallcode.isEmpty()) {
             throw new AbfallcodeNotFoundException(firmaId, prodstufeId, abfallId);
         }
@@ -80,5 +79,12 @@ public class FailuresService {
             throw new PersonalNotFoundException("personalQc", id);
         }
         return optionalPersonal.get();
+    }
+
+    public List<FailureDTO> findFailures() {
+        List<Failure> list = failureRepository.findAll();
+        return list.stream()
+                .map(failure -> modelMapper.map(failure, FailureDTO.class))
+                .toList();
     }
 }

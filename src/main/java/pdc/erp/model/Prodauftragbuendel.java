@@ -15,4 +15,5 @@ public class Prodauftragbuendel {
    private int stueckNr;
    private String buendelgruppeId;
    private int stueckTeilung;
+   private int stapelId;
 }

@@ -9,12 +9,11 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.Collection;
 
-@Repository
 public interface SchichtplangruppeRepository extends JpaRepository<Schichtplangruppe, Integer> {
     @Modifying
     @Transactional
     @Query(value="update erpschichtplangruppen set aktiv = 0", nativeQuery= true)
     void inactivateAll();
     @Query(value = "select s from Schichtplangruppe s where firma_id=:firmaId and aktiv=1")
-    Collection<Schichtplangruppe> listAllActive(int firmaId);
+    Collection<Schichtplangruppe> findAllByFirmaId(int firmaId);
 }

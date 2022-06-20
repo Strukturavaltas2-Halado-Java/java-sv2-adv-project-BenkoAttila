@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -43,4 +44,6 @@ public class Prodauftrag {
         this.prodstufeId = prodstufeId;
         this.paNrId = paNrId;
     }
+
+
 }

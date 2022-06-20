@@ -13,5 +13,5 @@ public class Personal {
     private int firmaId;
     private int personalId;
     private String persName;
-    private LocalDate datumAustritt;
+    private boolean aktiv;
 }

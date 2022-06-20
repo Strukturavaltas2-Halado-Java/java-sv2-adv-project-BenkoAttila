@@ -21,11 +21,10 @@ class ErpPersonalRepositoryDoubleTest {
 
 
     @Test
-    void testFindAllActive() throws JsonProcessingException {
+    void testFindAll() throws JsonProcessingException {
         List<Personal> actual = repository.findAll(5)
                 .collect(Collectors.toList());
         assertEquals(ErpPersonalRepositoryDouble.GENERATED_NAMES_COUNT, actual.size());
-        assertEquals(ErpPersonalRepositoryDouble.INACTIVE_COUNT, actual.stream().filter(personal -> personal.getDatumAustritt() != null).collect(Collectors.toList()).size());
     }
 
 }

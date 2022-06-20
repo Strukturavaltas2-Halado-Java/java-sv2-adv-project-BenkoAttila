@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 @Component
 public class ErpPersonalRepositoryDouble {
     public static final int GENERATED_NAMES_COUNT = 250;
-    public static final int INACTIVE_COUNT = 100;
     private List<String> vezeteknevek;
     private List<String> keresztnevek;
     private Random random = new Random();
@@ -50,11 +49,7 @@ public class ErpPersonalRepositoryDouble {
     }
 
     private Personal generatePersonal(int firmaId, int i) {
-        LocalDate datumAustritt = null;
-        if (i < 100 + INACTIVE_COUNT) {
-            datumAustritt=LocalDate.now().minusMonths(100L + INACTIVE_COUNT -i);
-        }
-        return new Personal(firmaId, i, generaterandomName(), datumAustritt);
+        return new Personal(firmaId, i, generaterandomName(), true);
     }
     private String generaterandomName() {
         int i = random.nextInt(vezeteknevek.size());
