@@ -17,7 +17,7 @@ import java.util.Objects;
 public class Prodauftrag {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "firma_id", nullable = false)
     private Integer firmaId;
     @Column(name = "prodstufe_id", nullable = false)

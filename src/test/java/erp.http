@@ -1,3 +1,26 @@
-GET localhost:8080/api/erp/2/master-files/failure-codes
+#### List previous erpTransfers
+GET localhost:8080/api/erp
+
+#### Delete all previous erpTransfers, next get (/api/erp/*) will initiate a new data transfer from erp
+DELETE localhost:8080/api/erp
+
+#### Failure-codes from firma 2
+GET localhost:8080/api/erp/3/master-files/failure-codes
+
+#### Failure-codes from firma 5
 GET localhost:8080/api/erp/5/master-files/failure-codes
 
+#### Work-orders from firma 2
+GET localhost:8080/api/erp/2/work-orders
+
+#### Work-orders from firma 5
+GET localhost:8080/api/erp/5/work-orders
+
+#### Find Work-orders By StueckNrBc
+GET localhost:8080/api/erp/2/work-orders?StueckNrBC=4846581/11
+
+#### Find Work-orders By Buendel
+GET localhost:8080/api/erp/5/work-orders?stapelId=102191&buendel1=1&buendel2=1&buendel3=0
+
+#### Find Work-orders By Buendel wrong format
+GET localhost:8080/api/erp/5/work-orders?stapelId=aaaa&buendel1=1&buendel2=1&buendel3=0
