@@ -107,19 +107,15 @@ class ErpServiceIntegrationTest {
         param.setStueckNrBc(Optional.of("4846581/11"));
         List<ProdauftragDTO> list = service.listAllMatchingWorkorders(param);
         assertThat(list).extracting(ProdauftragDTO::getPaNrId)
-                .contains(38499);
+                .containsOnly(38499);
     }
 
     @Test
     void testListAllActiveWorkordersByBuendel() {
         waitForTransferFinished();
-//        service.saveErpData(null);
         WorkOrderParams param = new WorkOrderParams(5, 0, 64156);
         param.setStapelBuendel(Optional.of("102191"), Optional.of("1"), Optional.of("1"), Optional.of("0"));
         List<ProdauftragDTO> list = service.listAllMatchingWorkorders(param);
-        ProdauftragDTO first = list.get(0);
-        assertEquals(5, first.getFirmaId());
-        assertEquals(50, first.getProdstufeId());
-        assertEquals(64156, first.getPaNrId());
+        assertThat(list).extracting(ProdauftragDTO::getPaNrId).containsOnly(64156);
     }
 }

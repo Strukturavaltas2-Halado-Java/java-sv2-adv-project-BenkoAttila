@@ -1,12 +1,14 @@
 package pdc.model;
 
 import lombok.Getter;
+import lombok.ToString;
 import pdc.exceptions.InvalidBarcodeException;
 import pdc.exceptions.StapeBuendelFormatException;
 
 import java.util.Optional;
 
 @Getter
+@ToString
 public class WorkOrderParams {
     private int firmaId;
     private int prodstufeId;
@@ -46,7 +48,7 @@ public class WorkOrderParams {
     }
 
     public ProdauftragenFilterType getFilterType() {
-        if (stueckNrBc != null) {
+        if (stueckNr > 0) {
             return ProdauftragenFilterType.BY_STUECK_NR;
         }
         if (stapelId > 0) {

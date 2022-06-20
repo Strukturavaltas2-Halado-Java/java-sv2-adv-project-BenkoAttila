@@ -1,0 +1,22 @@
+### Send POST request with json body
+POST localhost:8080/api/failures-v2
+Content-Type: application/json
+
+{
+  "firmaId": 5,
+  "prodstufeId": 50,
+  "paNrId": 38499,
+  "personalQc": 100,
+  "personalQc2": 0,
+  "pruefung2": false,
+  "abfallId": "101",
+  "personalId": 0,
+  "schichtplangruppeId": 0,
+  "mengeAbfall": 1.0,
+  "stueckNr": 0,
+  "stueckTeilung": 0,
+  "mengeGutz": 0.0,
+  "zuschnittFertig": false,
+  "mengeGutp": 0.0,
+  "pruefungFertig": false
+}

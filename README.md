@@ -30,14 +30,16 @@ Mivel az erp rendszerrel a kapcsolat csak a munkahelyemről hozható létre, ez�
 
 ## Felépítés
 
-Az alkalmazás lekéri és eltárolja az erp rendszerből elérhető törzsadatokat és gyártási megbízások adatait. Az adatok átvételét az adatbázisban a z erptransfers táblában tárolja az átvitel indítási és befejezés időpontjával.
-Az adatátvitel időközönként automatikusan elvégzi, hogy kellően friss adatok álljanak rendelkezésre az erp rendszer minimális igénybevételével.
-Tehát az adatbázis egy része az erp rendszer adatainak gyorsítótárazására szolgál
+Az alkalmazás lekéri és eltárolja az erp rendszerből elérhető törzsadatokat és gyártási megbízások adatait. Az adatok átvételét az adatbázisban az erptransfers táblában tárolja az átvitel indítási és befejezés időpontjával.
+Az adatátvitel időközönként automatikusan elvégzi (ha üres az erptransfer tábla, ha az utolsó átvétel befejezése óta már több mint 90 perc eltelt, vagy ha az utolsó adatátvétel kezdete óta már több mint 5 perc eltelt és még nem végzett), hogy kellően friss adatok álljanak rendelkezésre az erp rendszer minimális igénybevételével Az adatátvétel egy tranzakcióban történik, a HTTP kérések kiszolgálása közben az adatokat vagy még a régi, vagy már az új állapot szerint látja a program konzisztensen.
+Tehát az adatbázis egy része az erp rendszer adatainak gyorsítótárazására szolgál. Azokban a táblákban (erpprodauftragen, erpabfallcodes, erppersonals, erpschichtplangruppen), amire másik táblák hivatkoznak idegen kulccsal az átvitel előtt az adatokat inaktiválja a program (törölni nem lehet, mert sérülne az adatbázis integritása)
+az új adatok tárolásánál ha van már inaktívvá tett előzmény, akkor azt újraaktiválja a program és frissíti az elsődleges kulcs kivételével az adatokat. Azokat a táblákat, amire nincs idegen kulccsal hivatkozás, az átvétel előtt a program törléssel kiüríti.
+
 ![erp-vel kapcsolatos táblák](doc/erp.drawio.png)
 
-az erp rendszer több céget kezel (nálunk két anyacég + a magyar leányvállalat), ezeknek eltérő a firma_id-jük.
-az erp rendszer többféle gyártási folyamatot kezel, ezeket a prodstufe_id különbözteti meg. Pl nálunka z 50-es prodstufe_id a konfekcionálást jelenti,
-a 90-es pedig az autóipari szabányok szabását és minősítését. Az ezek szerinti bontás/csoportosítás a programban sok helyen megjelenik.
+Az erp rendszer több céget kezel (nálunk két anyacég + a magyar leányvállalat), ezeknek eltérő a firma_id-jük (1,2 és 5).
+az erp rendszer többféle gyártási folyamatot kezel, ezeket a prodstufe_id különbözteti meg. Pl nálunk az 50-es prodstufe_id a konfekcionálást jelenti,
+a 90-es pedig az autóipari szabányok szabását és minősítését. Az ezek szerinti bontás/csoportosítás a programban majd minden helyen megjelenik.
 
 
 ### Prodauftrag

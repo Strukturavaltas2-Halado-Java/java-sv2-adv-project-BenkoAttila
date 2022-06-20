@@ -2,6 +2,7 @@ package pdc.failures;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Service
 @Validated
 @RequiredArgsConstructor
+@Slf4j
 public class ErpService {
     private static final int WAIT_BEFORE_NEW_COPY = 90;
     private static final int COPY_TIMEOUT = 5;
@@ -265,7 +267,7 @@ public class ErpService {
     }
 
     public List<AbfallcodeDTO> listAllActivefailurecodes(int firmaId) {
-        return abfallcodeRepository.findByFirmaWithAktivTrue(firmaId)
+        return abfallcodeRepository.findByFirmaWithAktivTrue(firmaId, true)
                 .stream()
                 .map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDTO.class))
                 .toList();
@@ -275,6 +277,7 @@ public class ErpService {
 
 
     public List<ProdauftragDTO> listAllMatchingWorkorders(@Valid WorkOrderParams param) {
+        log.info(param.toString());
         switch (param.getFilterType()) {
             case BY_NR:
                 if (param.getPaNrId() > 0) {
@@ -293,14 +296,23 @@ public class ErpService {
                 }
             case BY_BUENDEL:
                 List<Prodauftragbuendel> pabuendellist = prodauftragbuendelRepository.listaAllByStapelIdAndBuendel1AndBuendel2AndBuendel3(param.getStapelId(), param.getBuendel1(), param.getBuendel2(), param.getBuendel3());
+                pabuendellist.forEach(p -> log.info(p.toString()));
                 return pabuendellist.stream()
                         .filter(prodauftragbuendel -> prodauftragbuendel.getProdauftrag().getFirmaId() == param.getFirmaId())
+                        .filter(prodauftragbuendel -> prodauftragbuendel.getStapelId() == param.getStapelId())
+                        .filter(prodauftragbuendel -> prodauftragbuendel.getStueckNr() == param.getStueckNr())
+                        .filter(prodauftragbuendel -> prodauftragbuendel.getBuendelgruppeId().equals(Integer.toString(param.getBuendel2())))
+                        .filter(prodauftragbuendel -> prodauftragbuendel.getStueckTeilung() == param.getStueckTeilung())
                         .map(Prodauftragbuendel::getProdauftrag).map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class)).toList();
             case BY_STUECK_NR:
+                log.info(String.format("%d, %d", param.getStueckNr(), param.getStueckTeilung()));
                 List<Lagerbestdetail> lbdlist = lagerbestRepository.findByStueckNrAndStueckTeilung(param.getStueckNr(), param.getStueckTeilung());
                 return lbdlist.stream()
+                        .filter(lagerbestdetail -> lagerbestdetail.getStueckNr() == param.getStueckNr())
+                        .filter(lagerbestdetail -> lagerbestdetail.getStueckTeilung() == param.getStueckTeilung())
                         .map(Lagerbestdetail::getProdauftrag)
                         .filter(Prodauftrag::isAktiv)
+                        .filter(prodauftrag -> prodauftrag.getFirmaId() == param.getFirmaId())
                         .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class)).toList();
             default:
         }
@@ -308,6 +320,7 @@ public class ErpService {
     }
 
     public ProdauftragDTO findWorkorder(@Valid WorkOrderParams param) {
+        log.info(param.toString());
         Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId(), true);
         if (optionalProdauftrag.isEmpty() || !optionalProdauftrag.get().isAktiv()) {
             throw new ProdauftragNotFoundException(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId());
@@ -327,3 +340,4 @@ public class ErpService {
                 .toList();
     }
 }
+

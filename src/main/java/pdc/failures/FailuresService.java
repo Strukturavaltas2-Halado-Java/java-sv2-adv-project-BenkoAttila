@@ -1,7 +1,10 @@
 package pdc.failures;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import pdc.dtos.CreateFailureCommand;
 import pdc.dtos.FailureDTO;
 import pdc.failures.exceptions.AbfallcodeNotFoundException;
@@ -9,25 +12,29 @@ import pdc.failures.exceptions.PersonalNotFoundException;
 import pdc.failures.exceptions.ProdauftragNotFoundException;
 import pdc.failures.exceptions.SchichtplangruppeNotFoundException;
 import pdc.model.*;
-import pdc.repositories.AbfallcodeRepository;
-import pdc.repositories.PersonalRepository;
-import pdc.repositories.ProdauftragRepository;
-import pdc.repositories.SchichtplangruppeRepository;
+import pdc.repositories.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
+@Slf4j
 public class FailuresService {
     private final ModelMapper modelMapper;
-    private final failureRepository failureRepository;
+    private final FailuresRepository failureRepository;
     private final ProdauftragRepository prodauftragRepository;
     private final PersonalRepository personalRepository;
     private final AbfallcodeRepository abfallcodeRepository;
     private final SchichtplangruppeRepository schichtplangruppeRepository;
     @Transactional
     public FailureDTO createFailure(CreateFailureCommand command) {
+        log.info(command.toString());
+        if (command.getTsErfassung() == null) {
+            command.setTsErfassung(LocalDateTime.now());
+        }
         Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(command.getFirmaId(), command.getProdstufeId(), command.getPaNrId());
         if (optionalProdauftrag.isEmpty() || !optionalProdauftrag.get().isAktiv()) {
             throw new ProdauftragNotFoundException(command.getFirmaId(), command.getProdstufeId(), command.getPaNrId());
