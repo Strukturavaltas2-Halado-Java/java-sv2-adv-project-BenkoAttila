@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchichtplangruppeDTO {
+public class SchichtplangruppeDto {
     private int schichtplangruppeId;
     private String schichtplangruppeBez;
 }

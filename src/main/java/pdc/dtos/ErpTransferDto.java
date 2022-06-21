@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ErpTransferDTO {
+public class ErpTransferDto {
     private Integer transferId;
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;

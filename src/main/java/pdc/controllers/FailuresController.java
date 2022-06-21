@@ -1,15 +1,16 @@
-package pdc.failures;
+package pdc.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pdc.dtos.CreateFailureCommand;
-import pdc.dtos.FailureDTO;
+import pdc.dtos.FailureDto;
+import pdc.services.FailuresService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController()
@@ -22,16 +23,15 @@ public class FailuresController {
 
     @GetMapping("/failuresv2")
     @ResponseStatus(HttpStatus.OK)
-    public List<FailureDTO> findFailures() {
+    public List<FailureDto> findFailures() {
         return failuresService.findFailures();
     }
 
     @PostMapping("/failuresv2")
     @Operation(method = "Create new Failure")
     @ResponseStatus(value= HttpStatus.CREATED)
-    public String createFailure(@RequestBody CreateFailureCommand command) {
+    public FailureDto createFailure(@RequestBody CreateFailureCommand command) {
         log.info(command.toString());
-        return command.toString();
-//        return failuresService.createFailure(command);
+        return failuresService.createFailure(command);
     }
 }

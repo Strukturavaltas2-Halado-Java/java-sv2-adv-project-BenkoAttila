@@ -1,4 +1,4 @@
-package pdc.failures;
+package pdc.services;
 
 
 import lombok.RequiredArgsConstructor;
@@ -8,14 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import pdc.dtos.*;
 import pdc.erp.persistence.*;
-import pdc.failures.exceptions.ProdauftragNotFoundException;
 import pdc.model.*;
 import pdc.repositories.*;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +21,7 @@ import java.util.Optional;
 @Validated
 @RequiredArgsConstructor
 @Slf4j
-public class ErpService {
+public class ErpMasterFilesService {
     private static final int WAIT_BEFORE_NEW_COPY = 90;
     private static final int COPY_TIMEOUT = 5;
     private final ModelMapper modelMapper;
@@ -49,12 +46,12 @@ public class ErpService {
     private final ProdauftragbuendelRepository prodauftragbuendelRepository;
 
 
-    public List<AbfallcodeDTO> listAllfailureCodes(int companyId) {
-        return erpAbfallcodeRepository.findAll().filter(abfallcode -> abfallcode.getFirmaId() == companyId).map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDTO.class)).toList();
+    public List<AbfallcodeDto> listAllfailureCodes(int companyId) {
+        return erpAbfallcodeRepository.findAll().filter(abfallcode -> abfallcode.getFirmaId() == companyId).map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDto.class)).toList();
     }
 
-    public List<ErpTransferDTO> listAllErpTransfers() {
-        return erpTransferRepository.findAll().stream().map(erpTransfer -> modelMapper.map(erpTransfer, ErpTransferDTO.class)).toList();
+    public List<ErpTransferDto> listAllErpTransfers() {
+        return erpTransferRepository.findAll().stream().map(erpTransfer -> modelMapper.map(erpTransfer, ErpTransferDto.class)).toList();
     }
 
     public void transferDataFromErp() {
@@ -148,7 +145,7 @@ public class ErpService {
             Prodauftrag prodauftrag = null;
             Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             if (optionalProdauftrag.isEmpty()) {
-                prodauftrag = new pdc.model.Prodauftrag(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
+                prodauftrag = new Prodauftrag(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             } else {
                 prodauftrag = optionalProdauftrag.get();
             }
@@ -266,77 +263,23 @@ public class ErpService {
         }
     }
 
-    public List<AbfallcodeDTO> listAllActivefailurecodes(int firmaId) {
+    public List<AbfallcodeDto> listAllActivefailurecodes(int firmaId) {
         return abfallcodeRepository.findByFirmaWithAktivTrue(firmaId, true)
                 .stream()
-                .map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDTO.class))
+                .map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDto.class))
                 .toList();
     }
 
 
-
-
-    public List<ProdauftragDTO> listAllMatchingWorkorders(@Valid WorkOrderParams param) {
-        log.info(param.toString());
-        switch (param.getFilterType()) {
-            case BY_NR:
-                if (param.getPaNrId() > 0) {
-                    return prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId())
-                            .stream()
-                            .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
-                            .toList();
-                } else if (param.getProdstufeId() > 0) {
-                    return prodauftragRepository.findAllByFirmaIdAndProdstufeIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), true).stream()
-                            .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
-                            .toList();
-                } else {
-                    return prodauftragRepository.findAllActiveWorkordersByFirmaIdAndAktiv(param.getFirmaId(), true).stream()
-                            .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class))
-                            .toList();
-                }
-            case BY_BUENDEL:
-                List<Prodauftragbuendel> pabuendellist = prodauftragbuendelRepository.listaAllByStapelIdAndBuendel1AndBuendel2AndBuendel3(param.getStapelId(), param.getBuendel1(), param.getBuendel2(), param.getBuendel3());
-                pabuendellist.forEach(p -> log.info(p.toString()));
-                return pabuendellist.stream()
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getProdauftrag().getFirmaId() == param.getFirmaId())
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getStapelId() == param.getStapelId())
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getStueckNr() == param.getStueckNr())
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getBuendelgruppeId().equals(Integer.toString(param.getBuendel2())))
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getStueckTeilung() == param.getStueckTeilung())
-                        .map(Prodauftragbuendel::getProdauftrag).map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class)).toList();
-            case BY_STUECK_NR:
-                log.info(String.format("%d, %d", param.getStueckNr(), param.getStueckTeilung()));
-                List<Lagerbestdetail> lbdlist = lagerbestRepository.findByStueckNrAndStueckTeilung(param.getStueckNr(), param.getStueckTeilung());
-                return lbdlist.stream()
-                        .filter(lagerbestdetail -> lagerbestdetail.getStueckNr() == param.getStueckNr())
-                        .filter(lagerbestdetail -> lagerbestdetail.getStueckTeilung() == param.getStueckTeilung())
-                        .map(Lagerbestdetail::getProdauftrag)
-                        .filter(Prodauftrag::isAktiv)
-                        .filter(prodauftrag -> prodauftrag.getFirmaId() == param.getFirmaId())
-                        .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDTO.class)).toList();
-            default:
-        }
-        return new ArrayList<>();
-    }
-
-    public ProdauftragDTO findWorkorder(@Valid WorkOrderParams param) {
-        log.info(param.toString());
-        Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId(), true);
-        if (optionalProdauftrag.isEmpty() || !optionalProdauftrag.get().isAktiv()) {
-            throw new ProdauftragNotFoundException(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId());
-        }
-        return modelMapper.map(optionalProdauftrag.get(), ProdauftragDTO.class);
-    }
-
-    public List<PersonalDTO> listAllActiveEmployees(int firmaId) {
+    public List<PersonalDto> listAllActiveEmployees(int firmaId) {
         return personalRepository.findAllByFirmaId(firmaId).stream()
-                .map(sg -> modelMapper.map(sg, PersonalDTO.class))
+                .map(sg -> modelMapper.map(sg, PersonalDto.class))
                 .toList();
     }
 
-    public List<SchichtplangruppeDTO> listAllActiveWorkgroups(int firmaId) {
+    public List<SchichtplangruppeDto> listAllActiveWorkgroups(int firmaId) {
         return schichtplangruppeRepository.findAllByFirmaId(firmaId).stream()
-                .map(sg -> modelMapper.map(sg, SchichtplangruppeDTO.class))
+                .map(sg -> modelMapper.map(sg, SchichtplangruppeDto.class))
                 .toList();
     }
 }

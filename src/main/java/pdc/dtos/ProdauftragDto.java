@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ProdauftragDTO {
+public class ProdauftragDto {
     private int firmaId;
     private int prodstufeId;
     private int paNrId;

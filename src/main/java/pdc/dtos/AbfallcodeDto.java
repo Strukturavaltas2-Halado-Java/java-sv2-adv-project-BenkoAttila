@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AbfallcodeDTO {
+public class AbfallcodeDto {
     private int firmaId;
     private Integer prodstufeId;
     private String abfallId;

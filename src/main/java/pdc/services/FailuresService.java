@@ -1,16 +1,15 @@
-package pdc.failures;
+package pdc.services;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pdc.dtos.CreateFailureCommand;
-import pdc.dtos.FailureDTO;
-import pdc.failures.exceptions.AbfallcodeNotFoundException;
-import pdc.failures.exceptions.PersonalNotFoundException;
-import pdc.failures.exceptions.ProdauftragNotFoundException;
-import pdc.failures.exceptions.SchichtplangruppeNotFoundException;
+import pdc.dtos.FailureDto;
+import pdc.exceptions.AbfallcodeNotFoundException;
+import pdc.exceptions.PersonalNotFoundException;
+import pdc.exceptions.ProdauftragNotFoundException;
+import pdc.exceptions.SchichtplangruppeNotFoundException;
 import pdc.model.*;
 import pdc.repositories.*;
 
@@ -30,7 +29,7 @@ public class FailuresService {
     private final AbfallcodeRepository abfallcodeRepository;
     private final SchichtplangruppeRepository schichtplangruppeRepository;
     @Transactional
-    public FailureDTO createFailure(CreateFailureCommand command) {
+    public FailureDto createFailure(CreateFailureCommand command) {
         log.info(command.toString());
         if (command.getTsErfassung() == null) {
             command.setTsErfassung(LocalDateTime.now());
@@ -69,7 +68,9 @@ public class FailuresService {
         failure.setTsErfassung(command.getTsErfassung());
         failure.setPruefung2(command.getPruefung2());
         failureRepository.save(failure);
-        return modelMapper.map(failure, pdc.dtos.FailureDTO.class);
+        FailureDto dto = modelMapper.map(failure, FailureDto.class);
+        log.info(dto.toString());
+        return dto;
     }
 
     private Abfallcode findAbfallcode(int firmaId, int prodstufeId, String abfallId) {
@@ -88,10 +89,10 @@ public class FailuresService {
         return optionalPersonal.get();
     }
 
-    public List<FailureDTO> findFailures() {
+    public List<FailureDto> findFailures() {
         List<Failure> list = failureRepository.findAll();
         return list.stream()
-                .map(failure -> modelMapper.map(failure, FailureDTO.class))
+                .map(failure -> modelMapper.map(failure, FailureDto.class))
                 .toList();
     }
 }

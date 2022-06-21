@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @ToString
-public class PersonalDTO {
+public class PersonalDto {
     private int personalId;
     private String persName;
 }

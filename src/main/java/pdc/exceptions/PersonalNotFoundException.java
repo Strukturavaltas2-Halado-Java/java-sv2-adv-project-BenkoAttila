@@ -1,4 +1,4 @@
-package pdc.failures.exceptions;
+package pdc.exceptions;
 
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;

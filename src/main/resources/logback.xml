@@ -8,10 +8,10 @@
         </encoder>
     </appender>
 
-<!--    <logger name="org.springframework" level="OFF"/>-->
-<!--    <logger name="org.spring.boot" level="OFF"/>-->
-<!--    <logger name="org.apache" level="OFF"/>-->
-<!--    <logger name="locations" level="OFF"/>-->
+    <logger name="org.springframework" level="OFF"/>
+    <logger name="org.spring.boot" level="OFF"/>
+    <logger name="org.apache" level="OFF"/>
+    <logger name="locations" level="OFF"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />

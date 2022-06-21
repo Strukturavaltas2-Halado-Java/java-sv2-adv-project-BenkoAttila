@@ -1,8 +1,15 @@
 package pdc.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
-public class FailureDTO {
+@Getter
+@Setter
+@ToString
+public class FailureDto {
     private Long id;
     private int firmaId;
     private int prodstufeId;

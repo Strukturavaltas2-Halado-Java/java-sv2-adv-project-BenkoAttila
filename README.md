@@ -30,6 +30,10 @@ Mivel az erp rendszerrel a kapcsolat csak a munkahelyemről hozható létre, ez�
 
 ## Felépítés
 
+Három controller (erp/master files kérések, erp/work-orders kérések és a /failures kérések kisolgálására), három service osztály és a megfelelő entitásokhoz tartozó Repository-k ból áll a program.
+
+## Működési elv
+
 Az alkalmazás lekéri és eltárolja az erp rendszerből elérhető törzsadatokat és gyártási megbízások adatait. Az adatok átvételét az adatbázisban az erptransfers táblában tárolja az átvitel indítási és befejezés időpontjával.
 Az adatátvitel időközönként automatikusan elvégzi (ha üres az erptransfer tábla, ha az utolsó átvétel befejezése óta már több mint 90 perc eltelt, vagy ha az utolsó adatátvétel kezdete óta már több mint 5 perc eltelt és még nem végzett), hogy kellően friss adatok álljanak rendelkezésre az erp rendszer minimális igénybevételével Az adatátvétel egy tranzakcióban történik, a HTTP kérések kiszolgálása közben az adatokat vagy még a régi, vagy már az új állapot szerint látja a program konzisztensen.
 Tehát az adatbázis egy része az erp rendszer adatainak gyorsítótárazására szolgál. Azokban a táblákban (erpprodauftragen, erpabfallcodes, erppersonals, erpschichtplangruppen), amire másik táblák hivatkoznak idegen kulccsal az átvitel előtt az adatokat inaktiválja a program (törölni nem lehet, mert sérülne az adatbázis integritása)

@@ -26,7 +26,7 @@ public class Failure {
     @ManyToOne
     @JoinColumn(name="personal_qc")
     private Personal personalQc;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name="personal_qc2")
     private Personal personalQc2;
     private Boolean pruefung2;

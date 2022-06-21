@@ -1,13 +1,14 @@
-package pdc.failures;
+package pdc.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pdc.dtos.*;
 import lombok.RequiredArgsConstructor;
+import pdc.services.ErpMasterFilesService;
+import pdc.services.ErpWorkOrdersService;
 import pdc.model.WorkOrderParams;
 import pdc.validators.WorkOrderParamsValidator;
 
@@ -18,39 +19,15 @@ import java.util.Optional;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "erp data operations")
-public class ErpController {
-    private final ErpService service;
+@Tag(name = "erp work order related operations")
+public class ErpWorkOrdersController {
+    private final ErpWorkOrdersService service;
+    private final ErpMasterFilesService masterFilesService;
     private final WorkOrderParamsValidator workOrderParamsValidator;
-
-    @GetMapping("/erp/{firmaId}/master-files/failure-codes")
-    @Operation(method = "get failure-codes from erp")
-    @ResponseStatus(HttpStatus.OK)
-    public List<AbfallcodeDTO> listAllfailureCodes(@PathVariable int firmaId) {
-        service.transferDataFromErp();
-        return service.listAllActivefailurecodes(firmaId);
-    }
-
-    @GetMapping("/erp/{firmaId}/master-files/employees")
-    @Operation(method = "get employees from erp")
-    @ResponseStatus(HttpStatus.OK)
-    public List<PersonalDTO> listAllEmployees(@PathVariable int firmaId) {
-        service.transferDataFromErp();
-        return service.listAllActiveEmployees(firmaId);
-    }
-
-    @GetMapping("/erp/{firmaId}/master-files/work-groups")
-    @Operation(method = "get production groups from erp")
-    @ResponseStatus(HttpStatus.OK)
-    public List<SchichtplangruppeDTO> listAllWorkgroups(@PathVariable int firmaId) {
-        service.transferDataFromErp();
-        return service.listAllActiveWorkgroups(firmaId);
-    }
-
     @GetMapping("/erp/{firmaId}/work-orders")
     @Operation(method = "get work-orders from erp")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProdauftragDTO> listAllWorkorders(
+    public List<ProdauftragDto> listAllWorkorders(
             @RequestParam Optional<String> stueckNrBc,
             @RequestParam Optional<String> stapelId,
             @RequestParam Optional<String> buendel1,
@@ -60,14 +37,14 @@ public class ErpController {
         WorkOrderParams param = new WorkOrderParams(firmaId, 0, 0);
         param.setStueckNrBc(stueckNrBc);
         param.setStapelBuendel(stapelId, buendel1, buendel2, buendel3);
-        service.transferDataFromErp();
+        masterFilesService.transferDataFromErp();
         return service.listAllMatchingWorkorders(param);
     }
 
     @GetMapping("/erp/{firmaId}/work-orders/{prodstufeId}")
     @Operation(method = "get work-orders from erp")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProdauftragDTO> listAllWorkorders(@RequestParam Optional<String> StueckNrBc,
+    public List<ProdauftragDto> listAllWorkorders(@RequestParam Optional<String> StueckNrBc,
                                                   @RequestParam Optional<String> stapelId,
                                                   @RequestParam Optional<String> buendel1,
                                                   @RequestParam Optional<String> buendel2,
@@ -77,34 +54,18 @@ public class ErpController {
         WorkOrderParams param = new WorkOrderParams(firmaId, prodstufeId, 0);
         param.setStueckNrBc(StueckNrBc);
         param.setStapelBuendel(stapelId, buendel1, buendel2, buendel3);
-        service.transferDataFromErp();
+        masterFilesService.transferDataFromErp();
         return service.listAllMatchingWorkorders(param);
     }
 
     @GetMapping("/erp/{firmaId}/work-orders/{prodstufeId}/{paNrId}")
     @Operation(method = "get specified work-order")
     @ResponseStatus(HttpStatus.OK)
-    public ProdauftragDTO listAllWorkorders(@PathVariable int firmaId,
+    public ProdauftragDto listAllWorkorders(@PathVariable int firmaId,
                                             @PathVariable int prodstufeId,
                                             @PathVariable int paNrId) {
         WorkOrderParams param = new WorkOrderParams(firmaId, prodstufeId, paNrId);
-        service.transferDataFromErp();
+        masterFilesService.transferDataFromErp();
         return service.findWorkorder(param);
-    }
-
-    @GetMapping("/erp")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(method = "get erp data transfer details list")
-    public List<ErpTransferDTO> listAllErpTransfers() {
-        service.transferDataFromErp();
-        return service.listAllErpTransfers();
-    }
-
-    @DeleteMapping("/erp")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(method = "vanish erp data transfer list, and initiate a new data transfer")
-    public void deleteAllERPTransfers() {
-        service.deleteAllTransfers();
-        service.transferDataFromErp();
     }
 }

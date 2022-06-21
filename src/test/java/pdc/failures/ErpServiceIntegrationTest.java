@@ -1,7 +1,6 @@
 package pdc.failures;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +8,7 @@ import pdc.dtos.*;
 import pdc.model.*;
 import pdc.erp.persistence.ErpPersonalRepositoryDouble;
 import pdc.repositories.*;
+import pdc.services.ErpWorkOrdersService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ErpServiceIntegrationTest {
     private static final int TRANSFER_WAIT_MINUTES = 5;
     @Autowired
-    ErpService service;
+    ErpWorkOrdersService service;
 
     @Autowired
     ErpTransferRepository erpTransferRepository;
@@ -54,15 +54,15 @@ class ErpServiceIntegrationTest {
 
     @Test
     void testTransferAndListAllActiveEmployees() {
-        List<PersonalDTO> list = service.listAllActiveEmployees(5);
+        List<PersonalDto> list = service.listAllActiveEmployees(5);
         assertEquals(ErpPersonalRepositoryDouble.GENERATED_NAMES_COUNT, list.size());
     }
 
     @Test
     void testTransferAndListAllActiveAbfallcodes() {
         waitForTransferFinished();
-        List<AbfallcodeDTO> list2 = service.listAllfailureCodes(2);
-        List<AbfallcodeDTO> list5 = service.listAllfailureCodes(5);
+        List<AbfallcodeDto> list2 = service.listAllfailureCodes(2);
+        List<AbfallcodeDto> list5 = service.listAllfailureCodes(5);
         assertEquals(50, list2.size());
         assertEquals(34, list5.size());
     }
@@ -70,8 +70,8 @@ class ErpServiceIntegrationTest {
     @Test
     void testTransferAndListAllActiveProdauftrag() {
         waitForTransferFinished();
-        List<ProdauftragDTO> list2 = service.listAllMatchingWorkorders(new WorkOrderParams(2, 0, 0));
-        List<ProdauftragDTO> list5 = service.listAllMatchingWorkorders(new WorkOrderParams(5, 0, 0));
+        List<ProdauftragDto> list2 = service.listAllMatchingWorkorders(new WorkOrderParams(2, 0, 0));
+        List<ProdauftragDto> list5 = service.listAllMatchingWorkorders(new WorkOrderParams(5, 0, 0));
         assertEquals(155, list2.size());
         assertEquals(374, list5.size());
     }
@@ -79,14 +79,14 @@ class ErpServiceIntegrationTest {
     @Test
     void testTransferAndListAllActiveSchichtplangruppe() {
         waitForTransferFinished();
-        List<SchichtplangruppeDTO> list5 = service.listAllActiveWorkgroups(5);
+        List<SchichtplangruppeDto> list5 = service.listAllActiveWorkgroups(5);
         assertEquals(51, list5.size());
     }
 
     @Test
     void testFindByFirmaIdAndProdstufeIdAndPaNrId() {
         waitForTransferFinished();
-        ProdauftragDTO prodauftrag = service.findWorkorder(new WorkOrderParams(5, 50, 69986));
+        ProdauftragDto prodauftrag = service.findWorkorder(new WorkOrderParams(5, 50, 69986));
         assertEquals(69986, prodauftrag.getPaNrId());
         assertEquals(5, prodauftrag.getFirmaId());
         assertEquals(50, prodauftrag.getProdstufeId());
@@ -96,7 +96,7 @@ class ErpServiceIntegrationTest {
     void testListAllActiveWorkorders() {
         waitForTransferFinished();
         WorkOrderParams param = new WorkOrderParams(-1, 0, 0);
-        List<ProdauftragDTO> list = service.listAllMatchingWorkorders(param);
+        List<ProdauftragDto> list = service.listAllMatchingWorkorders(param);
         list.forEach(System.out::println);
     }
 
@@ -105,8 +105,8 @@ class ErpServiceIntegrationTest {
         waitForTransferFinished();
         WorkOrderParams param = new WorkOrderParams(5, 0, 0);
         param.setStueckNrBc(Optional.of("4846581/11"));
-        List<ProdauftragDTO> list = service.listAllMatchingWorkorders(param);
-        assertThat(list).extracting(ProdauftragDTO::getPaNrId)
+        List<ProdauftragDto> list = service.listAllMatchingWorkorders(param);
+        assertThat(list).extracting(ProdauftragDto::getPaNrId)
                 .containsOnly(38499);
     }
 
@@ -115,7 +115,7 @@ class ErpServiceIntegrationTest {
         waitForTransferFinished();
         WorkOrderParams param = new WorkOrderParams(5, 0, 64156);
         param.setStapelBuendel(Optional.of("102191"), Optional.of("1"), Optional.of("1"), Optional.of("0"));
-        List<ProdauftragDTO> list = service.listAllMatchingWorkorders(param);
-        assertThat(list).extracting(ProdauftragDTO::getPaNrId).containsOnly(64156);
+        List<ProdauftragDto> list = service.listAllMatchingWorkorders(param);
+        assertThat(list).extracting(ProdauftragDto::getPaNrId).containsOnly(64156);
     }
 }
