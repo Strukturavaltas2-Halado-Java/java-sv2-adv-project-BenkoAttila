@@ -69,6 +69,15 @@ public class FailuresService {
         failure.setPruefung2(command.getPruefung2());
         failureRepository.save(failure);
         FailureDto dto = modelMapper.map(failure, FailureDto.class);
+        dto.setFirmaId(failure.getProdauftrag().getFirmaId());
+        dto.setProdstufeId(failure.getProdauftrag().getProdstufeId());
+        dto.setPaNrId(failure.getProdauftrag().getPaNrId());
+        if (failure.getPersonal() != null) {
+            dto.setPersonalId(failure.getPersonal().getPersonalId());
+        }
+        dto.setSchichtplangruppeId(failure.getSchichtplangruppe().getSchichtplangruppeId());
+        dto.setPersonalQc(failure.getPersonalQc().getPersonalId());
+        dto.setPersonalQc2(failure.getPersonalQc2().getPersonalId());
         log.info(dto.toString());
         return dto;
     }

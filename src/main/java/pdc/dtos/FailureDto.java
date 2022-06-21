@@ -3,6 +3,7 @@ package pdc.dtos;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.modelmapper.spi.DestinationSetter;
 
 import java.time.LocalDateTime;
 
