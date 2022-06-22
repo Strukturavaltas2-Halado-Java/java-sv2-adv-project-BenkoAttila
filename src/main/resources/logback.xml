@@ -8,10 +8,14 @@
         </encoder>
     </appender>
 
-    <logger name="org.hibernate" level="OFF"/>
-    <logger name="org.spring.boot" level="OFF"/>
-    <logger name="org.apache" level="OFF"/>
-    <logger name="locations" level="OFF"/>
+    <logger name="org.hibernate.type" level="TRACE" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
+<!--    <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />-->
+    <logger name="logging.level.org.hibernate.SQL" level="DEBUG" />
+<!--    <logger name="org.hibernate" level="OFF"/>-->
+<!--    <logger name="org.spring.boot" level="OFF"/>-->
+<!--    <logger name="org.apache" level="OFF"/>-->
+<!--    <logger name="locations" level="OFF"/>-->
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

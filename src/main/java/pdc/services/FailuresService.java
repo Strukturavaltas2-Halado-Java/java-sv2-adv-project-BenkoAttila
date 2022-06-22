@@ -88,7 +88,7 @@ public class FailuresService {
 //                pa szám + buendelBC-re szűrés;
                 Prodauftrag prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()).orElseThrow(() -> new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()));
 //                return failureRepository.findByProdauftragAndBuendelBc(prodauftrag.getId(), params.getBuendelBc()).stream()
-                List<Failure> all = failureRepository.findByProdauftrag_Id(prodauftrag.getId());
+                List<Failure> all = failureRepository.findByProdauftrag_IdWithBuendelBc(prodauftrag.getId(), params.getBuendelBc());
                 return all.stream()
                         .map(failure -> modelMapper.map(failure, FailureDto.class))
                         .toList();

@@ -17,7 +17,7 @@ public interface FailuresRepository extends JpaRepository<Failure, Long> {
 //    @Query("select f from Failure f where ts_erfassung >=:from and personal_qc=:personalId or personal_qc2=:personalId")
 //    List<FailureDto> findByPersonalQCFromDateTime(int personalId, LocalDateTime from);
 
-    List<Failure> findByProdauftrag_Id(Long id);
+    List<Failure> findByProdauftrag_IdWithBuendelBc(Long id, String buendelBc);
 
 
     default List<Failure> findByPersonalQCFromDateTime(int personalId, LocalDateTime from) {
