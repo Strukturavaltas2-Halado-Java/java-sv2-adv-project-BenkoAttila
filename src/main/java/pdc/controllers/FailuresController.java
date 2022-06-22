@@ -36,14 +36,14 @@ public class FailuresController {
     @ResponseStatus(HttpStatus.OK)
     public List<FailureDto> findFailures(@RequestParam Optional<Integer> firmaId,
                                          @RequestParam Optional<Integer> prodstufeId,
-                                         @RequestParam Optional<Integer> paNrID,
+                                         @RequestParam Optional<Integer> paNrId,
                                          @RequestParam Optional<String> buendelBc,
                                          @RequestParam Optional<String> abfallId,
                                          @RequestParam Optional<Boolean> withStueckNr,
                                          @RequestParam Optional<String> hours,
                                          @RequestParam Optional<String> personalId,
                                          @RequestParam Optional<String> count) {
-        FailuresParams params = new FailuresParams(firmaId, prodstufeId, paNrID);
+        FailuresParams params = new FailuresParams(firmaId, prodstufeId, paNrId);
         params.setPersonalParams(hours, personalId);
         params.setBuendelBc(buendelBc);
 

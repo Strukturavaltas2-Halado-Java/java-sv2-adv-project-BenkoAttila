@@ -1,5 +1,6 @@
 package pdc.repositories;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pdc.dtos.FailureDto;
@@ -17,8 +18,8 @@ public interface FailuresRepository extends JpaRepository<Failure, Long> {
 //    @Query("select f from Failure f where ts_erfassung >=:from and personal_qc=:personalId or personal_qc2=:personalId")
 //    List<FailureDto> findByPersonalQCFromDateTime(int personalId, LocalDateTime from);
 
-    List<Failure> findByProdauftrag_IdWithBuendelBc(Long id, String buendelBc);
-
+//    @Query(value = "select f from Failure f join fetch f.prodauftrag pa where prodauftrag_id=:id", nativeQuery = true)
+    List<Failure> findByProdauftrag_Id(Long id);
 
     default List<Failure> findByPersonalQCFromDateTime(int personalId, LocalDateTime from) {
         return findAll();

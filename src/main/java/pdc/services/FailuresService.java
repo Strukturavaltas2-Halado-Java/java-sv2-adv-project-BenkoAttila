@@ -73,7 +73,7 @@ public class FailuresService {
     }
 
     private Abfallcode findAbfallcode(int firmaId, int prodstufeId, String abfallId) {
-        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdWithAktiv(firmaId, prodstufeId, abfallId, true);
+        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdWithAktivTrue(firmaId, prodstufeId, abfallId);
         return optionalAbfallcode.orElseThrow(() -> new AbfallcodeNotFoundException(firmaId, prodstufeId, abfallId));
     }
 
@@ -83,12 +83,14 @@ public class FailuresService {
     }
 
     public List<FailureDto> findFailures(FailuresParams params) {
+        log.info("findFailures " + params.toString());
         switch (params.getFilterType()) {
             case BY_PA_NR:
 //                pa szám + buendelBC-re szűrés;
                 Prodauftrag prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()).orElseThrow(() -> new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()));
-//                return failureRepository.findByProdauftragAndBuendelBc(prodauftrag.getId(), params.getBuendelBc()).stream()
-                List<Failure> all = failureRepository.findByProdauftrag_IdWithBuendelBc(prodauftrag.getId(), params.getBuendelBc());
+                log.trace("paId: " + prodauftrag.getId());
+                //                return failureRepository.findByProdauftragAndBuendelBc(prodauftrag.getId(), params.getBuendelBc()).stream()
+                List<Failure> all = failureRepository.findByProdauftrag_Id(prodauftrag.getId());
                 return all.stream()
                         .map(failure -> modelMapper.map(failure, FailureDto.class))
                         .toList();
