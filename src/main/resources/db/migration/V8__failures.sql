@@ -1,0 +1,7 @@
+create table failures (id bigint not null auto_increment, buendel_bc varchar(255), menfge_abfall double precision, menge_gutp double precision, menge_gutz double precision, pruefung2 bit, pruefung_fertig bit, stueck_nr integer, stueck_teilung integer, ts_erfassung datetime(6), zuschnitt_fertig bit, abfall_id bigint, personal_id integer, personal_qc integer, personal_qc2 integer, prodauftrag_id bigint, schichtplangruppe_id integer, primary key (id)) engine=InnoDB;
+alter table failures add constraint FKjvwjlos4eejc61pqo1or5elim foreign key (abfall_id) references erpabfallcodes (id);
+alter table failures add constraint FKejd9tlwrt8358vcjeqse6h4vf foreign key (personal_id) references erppersonals (personal_id);
+alter table failures add constraint FKteaqml6ixmwqdhasfsiq8hy4c foreign key (personal_qc) references erppersonals (personal_id);
+alter table failures add constraint FKk7l04n18th0ih3i3uk2kng4lq foreign key (personal_qc2) references erppersonals (personal_id);
+alter table failures add constraint FKipenugjyqutxmu559n173xrfm foreign key (prodauftrag_id) references erpprodauftragen (id);
+alter table failures add constraint FK7rbwi0v2buf1wx21qld7sl1am foreign key (schichtplangruppe_id) references erpschichtplangruppen (schichtplangruppe_id);

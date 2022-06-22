@@ -37,6 +37,7 @@ public class ErpWorkOrdersController {
         WorkOrderParams param = new WorkOrderParams(firmaId, 0, 0);
         param.setStueckNrBc(stueckNrBc);
         param.setStapelBuendel(stapelId, buendel1, buendel2, buendel3);
+        new WorkOrderParamsValidator().validate(param);
         masterFilesService.transferDataFromErp();
         return service.listAllMatchingWorkorders(param);
     }
@@ -52,6 +53,7 @@ public class ErpWorkOrdersController {
                                                   @PathVariable int firmaId,
                                                   @PathVariable int prodstufeId) {
         WorkOrderParams param = new WorkOrderParams(firmaId, prodstufeId, 0);
+        new WorkOrderParamsValidator().validate(param);
         param.setStueckNrBc(StueckNrBc);
         param.setStapelBuendel(stapelId, buendel1, buendel2, buendel3);
         masterFilesService.transferDataFromErp();
@@ -65,6 +67,7 @@ public class ErpWorkOrdersController {
                                             @PathVariable int prodstufeId,
                                             @PathVariable int paNrId) {
         WorkOrderParams param = new WorkOrderParams(firmaId, prodstufeId, paNrId);
+        new WorkOrderParamsValidator().validate(param);
         masterFilesService.transferDataFromErp();
         return service.findWorkorder(param);
     }

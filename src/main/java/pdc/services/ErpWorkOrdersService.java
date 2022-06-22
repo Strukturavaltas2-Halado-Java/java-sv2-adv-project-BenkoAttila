@@ -90,7 +90,7 @@ public class ErpWorkOrdersService {
         return new ArrayList<>();
     }
 
-    public ProdauftragDto findWorkorder(@Valid WorkOrderParams param) {
+    public ProdauftragDto findWorkorder(WorkOrderParams param) {
         log.info(param.toString());
         Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId(), true);
         if (optionalProdauftrag.isEmpty() || !optionalProdauftrag.get().isAktiv()) {

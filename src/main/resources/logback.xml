@@ -8,12 +8,12 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="OFF"/>
+    <logger name="org.hibernate" level="OFF"/>
     <logger name="org.spring.boot" level="OFF"/>
     <logger name="org.apache" level="OFF"/>
     <logger name="locations" level="OFF"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 

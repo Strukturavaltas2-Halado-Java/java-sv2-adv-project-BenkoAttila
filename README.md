@@ -145,16 +145,17 @@ A `Prodauftrag` és a `failures` entitások között egyirányú, n-1 kapcsolat 
 
 Végpontok:
 
-| HTTP metódus | Végpont                  | Leírás                                                                                                                                                                                                                                                           |
-|--------------|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| GET          | `"api/failures-v2"`      | lekérdezi az összes entitást                                                                                                                                                                                                                                     |
-| GET          | `"api/failures-v2?"`     | queryString (firmaId=&prodstufeId=&PaNrID=&abfallId&withStueckNr&count) alapján lekérdezi a megadott gyártási megbízásnál éppen aktuális legtöbbször előforduló hibákat, vagy ha meg van adva a hibakód, akkor a megadottat, a mennyiséget összesíti hibakódokra |
-| GET          | `"api/failures-v2/{id}"` | lekérdez egy entitást `id` alapján                                                                                                                                                                                                                               |
-| POST         | `"api/failures-v2"`      | létrehoz egy új entitást                                                                                                                                                                                                                                         |
-| PUT          | `"api/failures-v2/{id}"` | módosítja egy entitást personal attributumát `id` alapján                                                                                                                                                                                                        |
+| HTTP metódus | Végpont                  | Leírás                                                                                                                                                                    |
+|--------------|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1. GET       | `"api/failures-v2"`      | lekérdezi az összes entitást                                                                                                                                              |
+| 2. GET       | `"api/failures-v2?"`     | queryString (buendelBc=) alapján lekérdezi az entitásokat (egy adott kötegen "buendelBc" berögzített hibák a dolgozókód bevitelhez)                                       |
+| 3. GET       | `"api/failures-v2?"`     | queryString (personalId=,hours=) alapján lekérdezi az entitásokat (egy adott meós által az utolsó hours órában rögzített hibák pa-nként összesített dbszámát adja vissza) |
+| 4. GET       | `"api/failures-v2/{id}"` | lekérdez egy entitást `id` alapján                                                                                                                                        |
+| 5. POST      | `"api/failures-v2"`      | létrehoz egy új entitást                                                                                                                                                  |
+| 6. PUT       | `"api/failures-v2/{id}"` | módosítja egy entitást personal attributumát `id` alapján                                                                                                                 |
+| 7. GET       | `"api/failures-v2/top?"` | queryString (firmaId=&prodstufeId=&PaNrID=&abfallId&withStueckNr&count) alapján lekérdezi a megadott gyártási megbízásnál éppen aktuális legtöbbször előforduló hibákat   |
 
-
-A queryStringgel történő lekérdezés hibakódonként összesített dbszámot ad vissza! Hbákat nem szabad törölni, ellenkező előjelő adatfelvitellel sztornózni szabad csak!
+A 3. és 7. lekérdezés hibakódonként összesített dbszámot ad vissza (a 3. pa szám szerinti bontásban)! Hibákat nem szabad törölni, ellenkező előjelő adatfelvitellel sztornózni szabad csak!
 
 ---
 

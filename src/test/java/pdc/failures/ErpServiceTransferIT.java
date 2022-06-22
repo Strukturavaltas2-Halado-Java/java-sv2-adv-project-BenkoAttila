@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pdc.model.ErpTransfer;
 import pdc.repositories.ErpTransferRepository;
+import pdc.services.ErpMasterFilesService;
 import pdc.services.ErpWorkOrdersService;
 
 import java.time.LocalDateTime;
@@ -14,9 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class ErpServiceTransferIntegrationTest {
+class ErpServiceTransferIT {
     @Autowired
-    ErpWorkOrdersService service;
+    ErpWorkOrdersService erpWorkOrdersService;
+
+    @Autowired
+    ErpMasterFilesService service;
 
     @Autowired
     ErpTransferRepository erpTransferRepository;

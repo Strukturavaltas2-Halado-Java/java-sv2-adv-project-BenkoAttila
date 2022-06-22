@@ -5,11 +5,13 @@ import lombok.ToString;
 import pdc.exceptions.InvalidBarcodeException;
 import pdc.exceptions.StapeBuendelFormatException;
 
+import javax.validation.constraints.Min;
 import java.util.Optional;
 
 @Getter
 @ToString
 public class WorkOrderParams {
+    @Min(1)
     private int firmaId;
     private int prodstufeId;
     private int paNrId;

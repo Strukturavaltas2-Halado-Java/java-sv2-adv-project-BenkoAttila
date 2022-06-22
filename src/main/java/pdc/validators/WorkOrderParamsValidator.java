@@ -8,7 +8,7 @@ import pdc.exceptions.IllegalWorkOrderParamException;
 import pdc.exceptions.InvalidStueckNrParameterException;
 import pdc.exceptions.PaNrShouldBeZeroWhenFiletringException;
 import pdc.model.WorkOrderParams;
-import pdc.validators.exceptions.IllegalBuendelFilteringException;
+import pdc.exceptions.IllegalBuendelFilteringException;
 
 @NoArgsConstructor
 @ToString

@@ -57,4 +57,36 @@ public class Failure {
     public Failure(Prodauftrag prodauftrag) {
         this.prodauftrag = prodauftrag;
     }
+
+    public int getFirmaId() {
+        return prodauftrag.getFirmaId();
+    }
+
+    public int getProdstufeId() {
+        return prodauftrag.getProdstufeId();
+    }
+
+    public int getPaNrId() {
+        return prodauftrag.getPaNrId();
+    }
+
+    public int getPersonalId() {
+        return personal != null ? personal.getPersonalId() : 0;
+    }
+
+    public int getPersonalQc() {
+        return personalQc != null ? personalQc.getPersonalId() : 0;
+    }
+
+    public int getPersonalQc2() {
+        return personalQc2 != null ? personalQc2.getPersonalId() : 0;
+    }
+
+    public int getSchichtplangruppeId() {
+        return schichtplangruppe != null ? schichtplangruppe.getSchichtplangruppeId() : 0;
+    }
+
+    public String getAbfallId() {
+        return abfallcode.getAbfallId();
+    }
 }

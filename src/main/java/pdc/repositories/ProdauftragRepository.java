@@ -21,6 +21,7 @@ public interface ProdauftragRepository extends JpaRepository<Prodauftrag, Long> 
     @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and aktiv=:aktiv")
     List<Prodauftrag> findAllByFirmaIdAndProdstufeIdAndAktiv(int firmaId, int prodstufeId, boolean aktiv);
 
+
     @Query(value="select p from Prodauftrag p where firmaId=:firmaId and prodstufeId=:prodstufeId and paNrId=:paNrId")
     Optional<Prodauftrag> findByFirmaIdAndProdstufeIdAndPaNrId(int firmaId, int prodstufeId, int paNrId);
 
