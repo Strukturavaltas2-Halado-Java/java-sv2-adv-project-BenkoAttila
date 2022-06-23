@@ -1,5 +1,6 @@
 package pdc.failures;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Slf4j
 class ErpServiceIT {
     private static final int TRANSFER_WAIT_MINUTES = 5;
     @Autowired
@@ -33,15 +35,15 @@ class ErpServiceIT {
 
     @BeforeEach
     void init() {
-        Optional<ErpTransfer> last = service.findLastRunningTransfer();
-        Optional<ErpTransfer> lastCompleted = service.findLastCompletedTransfer();
-        if (lastCompleted.isEmpty()) {
-            if (last.isEmpty()) {
-                service.deleteAllTransfers();
-                service.transferDataFromErp();
-            }
-            waitForTransferFinished();
-        }
+//        Optional<ErpTransfer> last = service.findLastRunningTransfer();
+//        Optional<ErpTransfer> lastCompleted = service.findLastCompletedTransfer();
+//        if (lastCompleted.isEmpty()) {
+//            if (last.isEmpty()) {
+//                service.deleteAllTransfers();
+//                service.transferDataFromErp();
+//            }
+//            waitForTransferFinished();
+//        }
     }
 
     void waitForTransferFinished() {
@@ -91,8 +93,8 @@ class ErpServiceIT {
     @Test
     void testFindByFirmaIdAndProdstufeIdAndPaNrId() {
         waitForTransferFinished();
-        ProdauftragDto prodauftrag = erpWorkOrdersService.findWorkorder(new WorkOrderParams(5, 50, 69986));
-        assertEquals(69986, prodauftrag.getPaNrId());
+        ProdauftragDto prodauftrag = erpWorkOrdersService.findWorkorder(new WorkOrderParams(5, 50, 69998));
+        assertEquals(69998, prodauftrag.getPaNrId());
         assertEquals(5, prodauftrag.getFirmaId());
         assertEquals(50, prodauftrag.getProdstufeId());
     }
@@ -118,7 +120,7 @@ class ErpServiceIT {
     @Test
     void testListAllActiveWorkordersByBuendel() {
         waitForTransferFinished();
-        WorkOrderParams param = new WorkOrderParams(5, 0, 64156);
+        WorkOrderParams param = new WorkOrderParams(5, 50, 0);
         param.setStapelBuendel(Optional.of("102191"), Optional.of("1"), Optional.of("1"), Optional.of("0"));
         List<ProdauftragDto> list = erpWorkOrdersService.listAllMatchingWorkorders(param);
         assertThat(list).extracting(ProdauftragDto::getPaNrId).containsOnly(64156);

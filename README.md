@@ -102,9 +102,10 @@ További erp-adatokkal kapcsolatos végpontok:
 | GET          | `"/api/erp"`                                               | lekérdezi az összes erpTransfer Entitást                                                                |
 | DELETE       | `"/api/erp"`                                               | törli az összes erpTransfer Entitást ezáltal a következő api/erp GET hívás újra letölti az erp adatokat |
 | GET          | `"/api/erp/{firmaId}/master-files/failure-codes"`          | lekérdezi az adott firmaId-hez és prodstufeId-hez tartozó összes hibakód (Abfallcode) entitást       |
-| GET          | `"/api/erp/{firmaId}/master-files/employees"`                       | lekérdezi az adott firmaId-hez tartozó összes dolgozó (Personal) entitást                            |
+| GET          | `"/api/erp/{firmaId}/master-files/employees"`              | lekérdezi az adott firmaId-hez tartozó összes dolgozó (Personal) entitást                            |
 
-
+minden erp-vel kapcsolatos végpontra küldött GET kérés erp adatátvétel indítását is magával vonja (lásd a működési elv szakasz).
+Ez a működés letiltható (alapvetően a teszteléshez) a disableTransferFromErp=true queryparameter használatával.
 
 ### Failure 
 

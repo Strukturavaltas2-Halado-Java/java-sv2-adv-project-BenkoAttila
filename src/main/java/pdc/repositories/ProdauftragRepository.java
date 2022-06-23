@@ -16,17 +16,17 @@ public interface ProdauftragRepository extends JpaRepository<Prodauftrag, Long> 
     @Transactional
     @Query(value="update erpprodauftragen set aktiv = 0", nativeQuery= true)
     void inactivateAll();
-    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and aktiv=:aktiv")
-    List<Prodauftrag> findAllActiveWorkordersByFirmaIdAndAktiv(int firmaId, boolean aktiv);
-    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and aktiv=:aktiv")
-    List<Prodauftrag> findAllByFirmaIdAndProdstufeIdAndAktiv(int firmaId, int prodstufeId, boolean aktiv);
+//    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and aktiv=:aktiv")
+    List<Prodauftrag> findByFirmaIdAndAktiv(int firmaId, boolean aktiv);
+//    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and aktiv=:aktiv")
+    List<Prodauftrag> findByFirmaIdAndProdstufeIdAndAktiv(int firmaId, int prodstufeId, boolean aktiv);
 
 
-    @Query(value="select p from Prodauftrag p where firmaId=:firmaId and prodstufeId=:prodstufeId and paNrId=:paNrId")
+//    @Query(value="select p from Prodauftrag p where firmaId=:firmaId and prodstufeId=:prodstufeId and paNrId=:paNrId")
     Optional<Prodauftrag> findByFirmaIdAndProdstufeIdAndPaNrId(int firmaId, int prodstufeId, int paNrId);
 
-    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
+//    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
     Optional<Prodauftrag> getByFirmaIdAndProdstufeIdAndPaNrId(int firmaId, int prodstufeId, int paNrId);
-    @Query(value="select p from Prodauftrag p where aktiv=:aktiv and firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
+//    @Query(value="select p from Prodauftrag p where aktiv=:aktiv and firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
     Optional<Prodauftrag> getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(int firmaId, int prodstufeId, int paNrId, boolean aktiv);
 }

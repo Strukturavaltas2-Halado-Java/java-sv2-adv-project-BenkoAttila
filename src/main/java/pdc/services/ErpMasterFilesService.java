@@ -54,6 +54,7 @@ public class ErpMasterFilesService {
         return erpTransferRepository.findAll().stream().map(erpTransfer -> modelMapper.map(erpTransfer, ErpTransferDto.class)).toList();
     }
 
+
     public void transferDataFromErp() {
         Integer currentTransferId = null;
         if (shouldStartTransfer()) {

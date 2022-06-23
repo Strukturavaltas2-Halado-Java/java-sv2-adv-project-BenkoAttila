@@ -57,11 +57,11 @@ public class ErpWorkOrdersService {
                             .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDto.class))
                             .toList();
                 } else if (param.getProdstufeId() > 0) {
-                    return prodauftragRepository.findAllByFirmaIdAndProdstufeIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), true).stream()
+                    return prodauftragRepository.findByFirmaIdAndProdstufeIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), true).stream()
                             .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDto.class))
                             .toList();
                 } else {
-                    return prodauftragRepository.findAllActiveWorkordersByFirmaIdAndAktiv(param.getFirmaId(), true).stream()
+                    return prodauftragRepository.findByFirmaIdAndAktiv(param.getFirmaId(), true).stream()
                             .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDto.class))
                             .toList();
                 }
@@ -69,22 +69,12 @@ public class ErpWorkOrdersService {
                 List<Prodauftragbuendel> pabuendellist = prodauftragbuendelRepository.listaAllByStapelIdAndBuendel1AndBuendel2AndBuendel3(param.getStapelId(), param.getBuendel1(), param.getBuendel2(), param.getBuendel3());
                 pabuendellist.forEach(p -> log.info(p.toString()));
                 return pabuendellist.stream()
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getProdauftrag().getFirmaId() == param.getFirmaId())
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getStapelId() == param.getStapelId())
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getStueckNr() == param.getStueckNr())
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getBuendelgruppeId().equals(Integer.toString(param.getBuendel2())))
-                        .filter(prodauftragbuendel -> prodauftragbuendel.getStueckTeilung() == param.getStueckTeilung())
-                        .map(Prodauftragbuendel::getProdauftrag).map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDto.class)).toList();
+                        .map(prodauftragbuendel -> modelMapper.map(prodauftragbuendel.getProdauftrag(), ProdauftragDto.class)).toList();
             case BY_STUECK_NR:
                 log.info(String.format("%d, %d", param.getStueckNr(), param.getStueckTeilung()));
-                List<Lagerbestdetail> lbdlist = lagerbestRepository.findByStueckNrAndStueckTeilung(param.getStueckNr(), param.getStueckTeilung());
+                List<Lagerbestdetail> lbdlist = lagerbestRepository.findByStueckNrEqualsAndStueckTeilungEquals(param.getStueckNr(), param.getStueckTeilung());
                 return lbdlist.stream()
-                        .filter(lagerbestdetail -> lagerbestdetail.getStueckNr() == param.getStueckNr())
-                        .filter(lagerbestdetail -> lagerbestdetail.getStueckTeilung() == param.getStueckTeilung())
-                        .map(Lagerbestdetail::getProdauftrag)
-                        .filter(Prodauftrag::isAktiv)
-                        .filter(prodauftrag -> prodauftrag.getFirmaId() == param.getFirmaId())
-                        .map(prodauftrag -> modelMapper.map(prodauftrag, ProdauftragDto.class)).toList();
+                        .map(lagerbestdetail -> modelMapper.map(lagerbestdetail.getProdauftrag(), ProdauftragDto.class)).toList();
             default:
         }
         return new ArrayList<>();

@@ -28,6 +28,7 @@ public class ErpWorkOrdersController {
     @Operation(method = "get work-orders from erp")
     @ResponseStatus(HttpStatus.OK)
     public List<ProdauftragDto> listAllWorkorders(
+            @RequestParam Optional<Boolean> disableTransferFromErp,
             @RequestParam Optional<String> stueckNrBc,
             @RequestParam Optional<String> stapelId,
             @RequestParam Optional<String> buendel1,
@@ -38,14 +39,17 @@ public class ErpWorkOrdersController {
         param.setStueckNrBc(stueckNrBc);
         param.setStapelBuendel(stapelId, buendel1, buendel2, buendel3);
         new WorkOrderParamsValidator().validate(param);
-        masterFilesService.transferDataFromErp();
+        if (!disableTransferFromErp.orElse(false)) {
+            masterFilesService.transferDataFromErp();
+        }
         return service.listAllMatchingWorkorders(param);
     }
 
     @GetMapping("/erp/{firmaId}/work-orders/{prodstufeId}")
     @Operation(method = "get work-orders from erp")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProdauftragDto> listAllWorkorders(@RequestParam Optional<String> StueckNrBc,
+    public List<ProdauftragDto> listAllWorkorders(@RequestParam Optional<Boolean>disableTransferFromErp,
+                                                  @RequestParam Optional<String> stueckNrBc,
                                                   @RequestParam Optional<String> stapelId,
                                                   @RequestParam Optional<String> buendel1,
                                                   @RequestParam Optional<String> buendel2,
@@ -53,22 +57,27 @@ public class ErpWorkOrdersController {
                                                   @PathVariable int firmaId,
                                                   @PathVariable int prodstufeId) {
         WorkOrderParams param = new WorkOrderParams(firmaId, prodstufeId, 0);
-        new WorkOrderParamsValidator().validate(param);
-        param.setStueckNrBc(StueckNrBc);
+        param.setStueckNrBc(stueckNrBc);
         param.setStapelBuendel(stapelId, buendel1, buendel2, buendel3);
-        masterFilesService.transferDataFromErp();
+        new WorkOrderParamsValidator().validate(param);
+        if (!disableTransferFromErp.orElse(false)) {
+            masterFilesService.transferDataFromErp();
+        }
         return service.listAllMatchingWorkorders(param);
     }
 
     @GetMapping("/erp/{firmaId}/work-orders/{prodstufeId}/{paNrId}")
     @Operation(method = "get specified work-order")
     @ResponseStatus(HttpStatus.OK)
-    public ProdauftragDto listAllWorkorders(@PathVariable int firmaId,
+    public ProdauftragDto listAllWorkorders(@RequestParam Optional<Boolean>disableTransferFromErp,
+                                            @PathVariable int firmaId,
                                             @PathVariable int prodstufeId,
                                             @PathVariable int paNrId) {
         WorkOrderParams param = new WorkOrderParams(firmaId, prodstufeId, paNrId);
         new WorkOrderParamsValidator().validate(param);
-        masterFilesService.transferDataFromErp();
+        if (!disableTransferFromErp.orElse(false)) {
+            masterFilesService.transferDataFromErp();
+        }
         return service.findWorkorder(param);
     }
 }
