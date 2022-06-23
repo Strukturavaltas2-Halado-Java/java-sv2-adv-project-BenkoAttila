@@ -24,8 +24,13 @@ public interface FailuresRepository extends JpaRepository<Failure, Long> {
     @Query("select f from Failure f join fetch f.prodauftrag left join f.personalQc as qc left join f.personalQc2 as qc2 where ts_erfassung >= :from and (qc.personalId=:personalId or qc2.personalId=:personalId)")
     List<Failure> findByPersonalQCFromDateTime(int personalId, LocalDateTime from);
 
+    @Query("select f from Failure f left join fetch f.prodauftrag left join fetch f.abfallcode where f.prodauftrag.id =:id and f.abfallcode.abfallId =:abfallId")
+    List<Failure> findByProdauftrag_IdAndAbfallId(Long id, String abfallId);
+
     @Query("select f from Failure f left join f.personalQc as qc left join f.personalQc2 as qc2 where (qc.personalId=:personalId or qc2.personalId=:personalId)")
     List<Failure> findByPersonalQC(int personalId);
 
     List<Failure> findByTsErfassungGreaterThan(LocalDateTime from);
+
+    List<Failure> findByProdauftrag_IdEquals(Long id);
 }

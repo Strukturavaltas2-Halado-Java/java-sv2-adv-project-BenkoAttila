@@ -14,10 +14,7 @@ import pdc.repositories.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -99,12 +96,12 @@ public class FailuresService {
 //                az utolsó hours (default=12) órában az adott meós (personalQc vagy personalQC2) által rögzített hibák
                 LocalDateTime from = LocalDateTime.now().minusHours(params.getHours());
                 failurelist = failureRepository.findByPersonalQCFromDateTime(params.getPersonalId(), from);
-                return SummarizeByPaAndAbfallId(failurelist);
+                return summarizeByPaAndAbfallId(failurelist);
         }
         throw new IllegalStateException("Invalid query type! " + params.getFailuresQueryType());
     }
 
-    private List<FailureDto> SummarizeByPaAndAbfallId(List<Failure> failurelist) {
+    private List<FailureDto> summarizeByPaAndAbfallId(List<Failure> failurelist) {
         Map<SummaryByWorkOrderAndFailureCodeKey, FailureSummarizedByPaAndAbfallcodeDto> summarized = new HashMap<>();
         SummaryByWorkOrderAndFailureCodeKey key = new SummaryByWorkOrderAndFailureCodeKey();
         for (Failure actual : failurelist) {
@@ -124,22 +121,33 @@ public class FailuresService {
     }
 
     public List<FailureDto> findTopFailures(FailuresParams params) {
+        log.info(params.toString());
+        List<Failure> failurelist;
         switch (params.getFailuresQueryType()) {
             case BY_PA_NR:
-//                pa szám + buendelBC-re szűrés;
-                break;
+                throw new IllegalStateException("Invalid query type! " + params.getFailuresQueryType());
             case BY_PERSONAL:
-//                az utolsó hours (default=12) órában az adott meós (personalQc vagy personalQC2) által rögzített hibák
-                break;
+                throw new IllegalStateException("Invalid query type! " + params.getFailuresQueryType());
             case BY_TOP:
-//                  összesített hibék, ah withStueckNr=true, akkorszabászai hibák, ahol a stueck_nr > 0,
+//                összesített hibák, ah withStueckNr=true, akkorszabászai hibák, ahol a stueck_nr > 0,
 //                ha withStueckNr=false akkor minősítési hibák, ahol stueckNr=0;
-                break;
+                Prodauftrag prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(
+                        params.getFirmaId(), params.getProdstufeId(), params.getPaNrId())
+                        .orElseThrow(() -> new InvalidPANrException(
+                                params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()));
+                if (params.getAbfallId() == null) {
+                    failurelist = failureRepository.findByProdauftrag_IdEquals(prodauftrag.getId());
+                    return summarizeByPaAndAbfallId(failurelist).stream()
+                            .peek(d -> log.info(d.toString()))
+                            .sorted(Comparator.comparing(FailureDto::getMengeAbfall).reversed())
+                            .limit(params.getCount())
+                            .toList();
+                } else {
+                    failurelist = failureRepository.findByProdauftrag_IdAndAbfallId(prodauftrag.getId(), params.getAbfallId());
+                    return summarizeByPaAndAbfallId(failurelist);
+                }
         }
-        List<Failure> list = failureRepository.findAll();
-        return list.stream()
-                .map(failure -> modelMapper.map(failure, FailureDto.class))
-                .toList();
+        throw new IllegalStateException("Invalid query type! " + params.getFailuresQueryType());
     }
 
     public FailureDto findFailure(long id) {
