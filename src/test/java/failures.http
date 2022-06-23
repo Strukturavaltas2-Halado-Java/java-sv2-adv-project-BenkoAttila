@@ -5,7 +5,8 @@ Content-Type: application/json
 {
   "firmaId": 5,
   "prodstufeId": 50,
-  "paNrId": 38499,
+  "paNrId": 70000,
+  "buendelBc": "bc",
   "personalQc": 100,
   "personalQc2": 0,
   "pruefung2": false,
@@ -20,3 +21,15 @@ Content-Type: application/json
   "mengeGutp": 0.0,
   "pruefungFertig": false
 }
+
+#### List all failures
+GET localhost:8080/api/failuresv2
+
+#### List summarized top failures for a specific workorder
+GET localhost:8080/api/erp/api/failuresv2/top?firmaId=5&prodstufeId=50&paNrID=70000&withStueckNr=false
+
+### List summarized failures detected (in the last hours defined in query) by specified quality controller person
+GET localhost:8080/api/failuresv2?hours=48&personalId=100
+
+### List failures entered by workorder and identitfier barcode
+GET localhost:8080/api/failuresv2?firmaId=5&prodstufeId=50&paNrId=70000&buendelBc=bc

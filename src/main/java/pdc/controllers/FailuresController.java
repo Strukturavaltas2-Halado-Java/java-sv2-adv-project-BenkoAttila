@@ -51,7 +51,7 @@ public class FailuresController {
     }
 
     @GetMapping("/failuresv2/top")
-    @Operation(method = "Kiválasztott PA-hoz rögzített top hibák lekérdezése hibakód vagy helyezés alapján")
+    @Operation(method = "Kiválasztott PA-hoz rögzített top hibák lekérdezése hibakód vagy mennyisége sorrend alapján")
     @ResponseStatus(HttpStatus.OK)
     public List<FailureDto> findFailures(@RequestParam Optional<Integer> firmaId,
                                          @RequestParam Optional<Integer> prodstufeId,

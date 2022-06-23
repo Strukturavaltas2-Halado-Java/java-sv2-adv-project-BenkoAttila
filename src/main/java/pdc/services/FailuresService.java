@@ -68,7 +68,6 @@ public class FailuresService {
         failure.setPruefung2(command.getPruefung2());
         failureRepository.save(failure);
         FailureDto dto = modelMapper.map(failure, FailureDto.class);
-        log.info(dto.toString());
         return dto;
     }
 
@@ -115,13 +114,11 @@ public class FailuresService {
             }
         }
         return summarized.entrySet().stream()
-                .peek(s -> log.info(s.toString()))
                 .map(s -> modelMapper.map(s.getValue(), FailureDto.class))
                 .toList();
     }
 
     public List<FailureDto> findTopFailures(FailuresParams params) {
-        log.info(params.toString());
         List<Failure> failurelist;
         switch (params.getFailuresQueryType()) {
             case BY_PA_NR:
@@ -136,9 +133,12 @@ public class FailuresService {
                         .orElseThrow(() -> new InvalidPANrException(
                                 params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()));
                 if (params.getAbfallId() == null) {
-                    failurelist = failureRepository.findByProdauftrag_IdEquals(prodauftrag.getId());
+                    if (params.isWithStueckNr()) {
+                        failurelist = failureRepository.findByProdauftrag_IdEqualsAndStueckNrGreaterThan(prodauftrag.getId(), 0);
+                    } else {
+                        failurelist = failureRepository.findByProdauftrag_IdEqualsAndStueckNrIsNull(prodauftrag.getId());
+                    }
                     return summarizeByPaAndAbfallId(failurelist).stream()
-                            .peek(d -> log.info(d.toString()))
                             .sorted(Comparator.comparing(FailureDto::getMengeAbfall).reversed())
                             .limit(params.getCount())
                             .toList();

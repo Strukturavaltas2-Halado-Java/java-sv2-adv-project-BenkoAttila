@@ -1,14 +1,10 @@
 package pdc.repositories;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import pdc.dtos.FailureDto;
 import pdc.model.Failure;
-import pdc.model.Prodauftrag;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 public interface FailuresRepository extends JpaRepository<Failure, Long> {
@@ -33,4 +29,10 @@ public interface FailuresRepository extends JpaRepository<Failure, Long> {
     List<Failure> findByTsErfassungGreaterThan(LocalDateTime from);
 
     List<Failure> findByProdauftrag_IdEquals(Long id);
+
+    List<Failure> findByProdauftrag_IdEqualsAndStueckNrIsNull(Long id);
+
+    List<Failure> findByProdauftrag_IdEqualsAndStueckNrGreaterThan(Long id, Integer stueckNr);
+
+
 }
