@@ -18,10 +18,14 @@ public interface FailuresRepository extends JpaRepository<Failure, Long> {
 //    @Query("select f from Failure f where ts_erfassung >=:from and personal_qc=:personalId or personal_qc2=:personalId")
 //    List<FailureDto> findByPersonalQCFromDateTime(int personalId, LocalDateTime from);
 
-//    @Query(value = "select f from Failure f join fetch f.prodauftrag pa where prodauftrag_id=:id", nativeQuery = true)
-    List<Failure> findByProdauftrag_Id(Long id);
+    @Query("select f from Failure f join fetch f.prodauftrag pa where buendel_bc=:buendelBc and pa.id=:id")
+    List<Failure> findByBuendelBcAndProdauftrag_Id(String buendelBc, Long id);
 
-    default List<Failure> findByPersonalQCFromDateTime(int personalId, LocalDateTime from) {
-        return findAll();
-    }
+    @Query("select f from Failure f join fetch f.prodauftrag left join f.personalQc as qc left join f.personalQc2 as qc2 where ts_erfassung >= :from and (qc.personalId=:personalId or qc2.personalId=:personalId)")
+    List<Failure> findByPersonalQCFromDateTime(int personalId, LocalDateTime from);
+
+    @Query("select f from Failure f left join f.personalQc as qc left join f.personalQc2 as qc2 where (qc.personalId=:personalId or qc2.personalId=:personalId)")
+    List<Failure> findByPersonalQC(int personalId);
+
+    List<Failure> findByTsErfassungGreaterThan(LocalDateTime from);
 }

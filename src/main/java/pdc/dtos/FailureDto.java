@@ -1,6 +1,7 @@
 package pdc.dtos;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.modelmapper.spi.DestinationSetter;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class FailureDto {
     private Long id;
     private int firmaId;

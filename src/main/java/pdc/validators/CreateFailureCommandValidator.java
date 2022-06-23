@@ -48,7 +48,7 @@ public class CreateFailureCommandValidator {
         }
     }
     private void validateAbfallcode(int firmaId, int prodstufeId, String abfallId) {
-        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdWithAktivTrue(firmaId, prodstufeId, abfallId);
+        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdAndAktivTrue(firmaId, prodstufeId, abfallId);
         if (optionalAbfallcode.isEmpty()) {
             throw new AbfallcodeNotFoundException(firmaId, prodstufeId, abfallId);
         }

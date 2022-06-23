@@ -12,6 +12,7 @@ import pdc.dtos.UpdateFailureCommand;
 import pdc.model.FailuresParams;
 import pdc.services.FailuresService;
 import pdc.validators.CreateFailureCommandValidator;
+import pdc.validators.FailuresParamsValidator;
 import pdc.validators.UpdateFailureCommandValidator;
 
 import javax.validation.Valid;
@@ -39,14 +40,13 @@ public class FailuresController {
                                          @RequestParam Optional<Integer> paNrId,
                                          @RequestParam Optional<String> buendelBc,
                                          @RequestParam Optional<String> abfallId,
-                                         @RequestParam Optional<Boolean> withStueckNr,
                                          @RequestParam Optional<String> hours,
-                                         @RequestParam Optional<String> personalId,
-                                         @RequestParam Optional<String> count) {
+                                         @RequestParam Optional<String> personalId) {
         FailuresParams params = new FailuresParams(firmaId, prodstufeId, paNrId);
         params.setPersonalParams(hours, personalId);
         params.setBuendelBc(buendelBc);
-
+        log.info("findFailures " + params.toString());
+        new FailuresParamsValidator().validate(params);
         return failuresService.findFailures(params);
     }
 
@@ -61,7 +61,8 @@ public class FailuresController {
                                          @RequestParam Optional<String> count) {
         FailuresParams params = new FailuresParams(firmaId, prodstufeId, paNrID);
         params.setTopParams(abfallId, withStueckNr, count);
-
+        log.info("findFailures/top " + params.toString());
+        new FailuresParamsValidator().validate(params);
         return failuresService.findTopFailures(params);
     }
 

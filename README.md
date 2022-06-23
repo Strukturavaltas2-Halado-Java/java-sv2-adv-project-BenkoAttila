@@ -41,7 +41,7 @@ az új adatok tárolásánál ha van már inaktívvá tett előzmény, akkor azt
 
 ![erp-vel kapcsolatos táblák](doc/erp.drawio.png)
 
-Az erp rendszer több céget kezel (nálunk két anyacég + a magyar leányvállalat), ezeknek eltérő a firma_id-jük (1,2 és 5).
+Az erp rendszer több céget kezel (nálunk két anyacég + a magyar leányvállalat), ezeknek eltérő a firma_id-jük (1,2 és 5). A dolgozók és csoportok a firmaId=5 cégadatbázisban vannak definiálva. Minden nyilvántartott gyártási folyamatot ők végeznek.
 az erp rendszer többféle gyártási folyamatot kezel, ezeket a prodstufe_id különbözteti meg. Pl nálunk az 50-es prodstufe_id a konfekcionálást jelenti,
 a 90-es pedig az autóipari szabányok szabását és minősítését. Az ezek szerinti bontás/csoportosítás a programban majd minden helyen megjelenik.
 
@@ -119,13 +119,13 @@ A `Failure` entitás a következő attribútumokkal rendelkezik:
 * `tsErfassung`: LocalDateTime, a hibarögzítés időpontja
 * ha nincs megadva, akkor az aktiális időpontot kell hasznáni.
 * `personalQc`: többb-egy kapcsolat Personal-hoz, a minősítő kódja (ha egy szemly minősített)
-* kötelező, és létező azonosítónak kell lennie
+* kötelező, és létező azonosítónak kell lennie, firmaId=5
 * `personalQc2`: többb-egy kapcsolat Personal-hoz, kétszemélyes minősítés esetén a második minősítő kódja
-* opcionális, de ha meg van adva akkor létező azonosítónak kell lennie
+* opcionális, de ha meg van adva akkor létező azonosítónak kell lennie, firmaId=5
 * `pruefung2`: boolean annak jelzésére, ha ez újbóli minősítés (bizonyos esetekben kétszer kell minősíteni)
 * `abfallcode`: hibakód, többb-egy kapcsolat az Abfallcode-hoz
 * kötelező megadni és a prodauftrag szerinti firmaId, prodstufeId szerint létező kódnak kell lennie
-* `personal`: többb-egy kapcsolat Personal-hoz, a hibát okozó dolgozó kódja
+* `personal`: többb-egy kapcsolat Personal-hoz, a hibát okozó dolgozó kódj, firmaId=5
 * utólag módosítható, mivel csak később deríthető ki!
 * opcionális, de ha meg van adva akkor létező azonosítónak kell lennie
 * `schichtplangruppe`: több-egy kapcsolat Schichtplangruppe-hoz, gyártó csoport azonosítója

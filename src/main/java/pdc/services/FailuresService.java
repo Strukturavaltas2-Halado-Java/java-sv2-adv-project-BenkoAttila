@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pdc.dtos.CreateFailureCommand;
 import pdc.dtos.FailureDto;
+import pdc.dtos.FailureSummarizedByPaAndAbfallcodeDto;
 import pdc.dtos.UpdateFailureCommand;
 import pdc.exceptions.*;
 import pdc.model.*;
@@ -13,7 +14,9 @@ import pdc.repositories.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -73,7 +76,7 @@ public class FailuresService {
     }
 
     private Abfallcode findAbfallcode(int firmaId, int prodstufeId, String abfallId) {
-        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdWithAktivTrue(firmaId, prodstufeId, abfallId);
+        Optional<Abfallcode> optionalAbfallcode = abfallcodeRepository.findByFirmaIdAndProdstufeIdAndAbfallIdAndAktivTrue(firmaId, prodstufeId, abfallId);
         return optionalAbfallcode.orElseThrow(() -> new AbfallcodeNotFoundException(firmaId, prodstufeId, abfallId));
     }
 
@@ -83,32 +86,45 @@ public class FailuresService {
     }
 
     public List<FailureDto> findFailures(FailuresParams params) {
-        log.info("findFailures " + params.toString());
-        switch (params.getFilterType()) {
+        List<Failure> failurelist;
+        switch (params.getFailuresQueryType()) {
             case BY_PA_NR:
 //                pa szám + buendelBC-re szűrés;
                 Prodauftrag prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()).orElseThrow(() -> new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()));
-                log.trace("paId: " + prodauftrag.getId());
-                //                return failureRepository.findByProdauftragAndBuendelBc(prodauftrag.getId(), params.getBuendelBc()).stream()
-                List<Failure> all = failureRepository.findByProdauftrag_Id(prodauftrag.getId());
-                return all.stream()
+                failurelist = failureRepository.findByBuendelBcAndProdauftrag_Id(params.getBuendelBc(), prodauftrag.getId());
+                return failurelist.stream()
                         .map(failure -> modelMapper.map(failure, FailureDto.class))
                         .toList();
             case BY_PERSONAL:
-                LocalDateTime from = LocalDateTime.now().minusHours(params.getHours());
-                return failureRepository.findByPersonalQCFromDateTime(params.getPersonalId(), from).stream()
-                        .map(failure -> modelMapper.map(failure, FailureDto.class))
-                        .toList();
 //                az utolsó hours (default=12) órában az adott meós (personalQc vagy personalQC2) által rögzített hibák
+                LocalDateTime from = LocalDateTime.now().minusHours(params.getHours());
+                failurelist = failureRepository.findByPersonalQCFromDateTime(params.getPersonalId(), from);
+                return SummarizeByPaAndAbfallId(failurelist);
         }
-        List<Failure> list = failureRepository.findAll();
-        return list.stream()
-                .map(failure -> modelMapper.map(failure, FailureDto.class))
+        throw new IllegalStateException("Invalid query type! " + params.getFailuresQueryType());
+    }
+
+    private List<FailureDto> SummarizeByPaAndAbfallId(List<Failure> failurelist) {
+        Map<SummaryByWorkOrderAndFailureCodeKey, FailureSummarizedByPaAndAbfallcodeDto> summarized = new HashMap<>();
+        SummaryByWorkOrderAndFailureCodeKey key = new SummaryByWorkOrderAndFailureCodeKey();
+        for (Failure actual : failurelist) {
+            FailureSummarizedByPaAndAbfallcodeDto dto = modelMapper.map(actual, FailureSummarizedByPaAndAbfallcodeDto.class);
+            key = modelMapper.map(actual, SummaryByWorkOrderAndFailureCodeKey.class);
+            FailureSummarizedByPaAndAbfallcodeDto sum = summarized.get(key);
+            if (sum == null) {
+                summarized.put(key, dto);
+            } else {
+                sum.addMengeAbfall(dto.getMengeAbfall());
+            }
+        }
+        return summarized.entrySet().stream()
+                .peek(s -> log.info(s.toString()))
+                .map(s -> modelMapper.map(s.getValue(), FailureDto.class))
                 .toList();
     }
 
     public List<FailureDto> findTopFailures(FailuresParams params) {
-        switch (params.getFilterType()) {
+        switch (params.getFailuresQueryType()) {
             case BY_PA_NR:
 //                pa szám + buendelBC-re szűrés;
                 break;

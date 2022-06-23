@@ -27,6 +27,8 @@ public class FailuresParams {
     private boolean withStueckNr;
     private int count;
 
+    private FailuresQueryType failuresQueryType;
+
     public FailuresParams(Optional<Integer> optionalFirmaId, Optional<Integer> optionalProdstufeId, Optional<Integer> optionalPaNrId) {
         if (optionalFirmaId.isPresent()) {
             this.firmaId = optionalFirmaId.get();
@@ -35,6 +37,7 @@ public class FailuresParams {
             this.prodstufeId = optionalProdstufeId.get();
         }
         if (optionalPaNrId.isPresent()) {
+            failuresQueryType = BY_PA_NR;
             this.paNrId = optionalPaNrId.get();
         }
     }
@@ -46,6 +49,7 @@ public class FailuresParams {
     }
 
     public void setTopParams(Optional<String> optionalAbfallId, Optional<String> optionalWithStueckNr, Optional<String> optionalCount) {
+        failuresQueryType = BY_TOP;
         if (optionalAbfallId.isPresent()) {
             this.abfallId = optionalAbfallId.get();
         }
@@ -69,23 +73,11 @@ public class FailuresParams {
                 this.hours = Integer.parseInt(optionalHours.get());
             }
             if (optionalPersonalId.isPresent()) {
+                failuresQueryType = BY_PERSONAL;
                 this.personalId = Integer.parseInt(optionalPersonalId.get());
             }
         } catch (NumberFormatException nfe) {
             throw new IlegalParamException(String.format("Invalid hours (%s) or personalId (%s)", hours, personalId));
         }
-    }
-
-    public FailuresQueryType getFilterType() {
-        if (id > 0) {
-            return BY_ID;
-        }
-        if (personalId > 0) {
-            return BY_PERSONAL;
-        }
-        if (paNrId > 0) {
-            return BY_PA_NR;
-        }
-        return BY_TOP;
     }
 }
