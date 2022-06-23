@@ -23,6 +23,8 @@ hogy az adatbeviteli program jelenítse meg az üzemi megbízáshoz tartoző leg
 -konfekcionálás(ruhaipar): a végellenőrzés során felmerülő hibák gyűjtése
 a minősítéssorán a minősítők beviszik atalált hiák kódját és mennyiségét. A hibás termékeket a csoportvezető visszavisz a termelésbe javításra. A csoportvezető ldönti, hogy melyik dolgozó okozta a hibát és ennek megfelelően a tableten megadja a hibához rendelt dolgozó kódját.
 
+
+
 Mivel az erp rendszer német és az adatbázis definíció is német, ezért a programban én is az erp rendszerbeli német neveket használom 
 
 Mivel az erp rendszerrel a kapcsolat csak a munkahelyemről hozható létre, ezért az erp adatátvételt csak szimulálja a program előre letárolt adatok alapján. Az erppersonals tábla tartalmát véletlenszerű nevek generálásával állítja elő. 
@@ -45,6 +47,7 @@ Az erp rendszer több céget kezel (nálunk két anyacég + a magyar leányváll
 az erp rendszer többféle gyártási folyamatot kezel, ezeket a prodstufe_id különbözteti meg. Pl nálunk az 50-es prodstufe_id a konfekcionálást jelenti,
 a 90-es pedig az autóipari szabányok szabását és minősítését. Az ezek szerinti bontás/csoportosítás a programban majd minden helyen megjelenik.
 
+![overview](doc/overview.drawio.png)
 
 ### Prodauftrag
 
