@@ -3,10 +3,7 @@ package pdc.validators;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pdc.dtos.CreateFailureCommand;
-import pdc.exceptions.AbfallcodeNotFoundException;
-import pdc.exceptions.PersonalNotFoundException;
-import pdc.exceptions.ProdauftragNotFoundException;
-import pdc.exceptions.SchichtplangruppeNotFoundException;
+import pdc.exceptions.*;
 import pdc.model.*;
 import pdc.repositories.AbfallcodeRepository;
 import pdc.repositories.PersonalRepository;
@@ -38,6 +35,13 @@ public class CreateFailureCommandValidator {
         }
         if (command.getSchichtplangruppeId() > 0) {
             validateSchchtplangruppe(command.getSchichtplangruppeId());
+        }
+        validateStueckTeilung(command);
+    }
+
+    private void validateStueckTeilung(CreateFailureCommand command) {
+        if (command.getStueckTeilung() != null && command.getStueckNr() == null) {
+            throw new InvalidStueckTeilungException(command.getStueckNr(), command.getStueckTeilung());
         }
     }
 

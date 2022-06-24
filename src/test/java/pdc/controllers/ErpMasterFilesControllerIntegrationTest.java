@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(statements = {"delete from erptransfers"})
 class ErpMasterFilesControllerIntegrationTest {
     @Autowired
     WebTestClient webTestClient;
@@ -31,8 +32,7 @@ class ErpMasterFilesControllerIntegrationTest {
 
     @BeforeEach
     void init() {
-//        erpMasterFilesService.deleteAllTransfers();
-//        erpMasterFilesService.transferDataFromErp();
+        erpMasterFilesService.transferDataFromErp();
     }
 
     @Test

@@ -63,6 +63,8 @@ public class FailuresService {
             failure.setSchichtplangruppe(optionalSchichtplangruppe.get());
         }
         failure.setBuendelBc(command.getBuendelBc());
+        failure.setStueckNr(command.getStueckNr());
+        failure.setStueckTeilung(command.getStueckTeilung());
         failure.setTsErfassung(command.getTsErfassung());
         failure.setMengeAbfall(command.getMengeAbfall());
         failure.setPruefung2(command.getPruefung2());
@@ -84,13 +86,29 @@ public class FailuresService {
     public List<FailureDto> findFailures(FailuresParams params) {
         List<Failure> failurelist;
         switch (params.getFailuresQueryType()) {
+            case BY_FIRMA_ID:
+                if (params.getBuendelBc() == null || params.getBuendelBc().isBlank()) {
+                    failurelist = failureRepository.findByProdauftrag_FirmaIdEquals(params.getFirmaId());
+                } else {
+                    failurelist = failureRepository.findByProdauftrag_FirmaIdEqualsAndBuendelBcEquals(params.getFirmaId(), params.getBuendelBc());
+                }
+                return convertToDto(failurelist);
+            case BY_FIRMA_ID_PRODSTUFE_ID:
+                if (params.getBuendelBc() == null || params.getBuendelBc().isBlank()) {
+                    failurelist = failureRepository.findByProdauftrag_FirmaIdEqualsAndProdauftrag_ProdstufeIdEquals(params.getFirmaId(), params.getProdstufeId());
+                } else {
+                    failurelist = failureRepository.findByProdauftrag_FirmaIdEqualsAndProdauftrag_ProdstufeIdEqualsAndBuendelBcEquals(params.getFirmaId(), params.getProdstufeId(), params.getBuendelBc());
+                }
+                return convertToDto(failurelist);
             case BY_PA_NR:
-//                pa szám + buendelBC-re szűrés;
                 Prodauftrag prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()).orElseThrow(() -> new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId()));
-                failurelist = failureRepository.findByBuendelBcAndProdauftrag_Id(params.getBuendelBc(), prodauftrag.getId());
-                return failurelist.stream()
-                        .map(failure -> modelMapper.map(failure, FailureDto.class))
-                        .toList();
+                failurelist = failureRepository.findByProdauftrag_Id(prodauftrag.getId());
+                if (params.getBuendelBc() == null || params.getBuendelBc().isBlank()) {
+                } else {
+                    failurelist = failureRepository.findByProdauftrag_IdAndBuendelBc(prodauftrag.getId(), params.getBuendelBc());
+                }
+                return convertToDto(failurelist);
+
             case BY_PERSONAL:
 //                az utolsó hours (default=12) órában az adott meós (personalQc vagy personalQC2) által rögzített hibák
                 LocalDateTime from = LocalDateTime.now().minusHours(params.getHours());
@@ -98,6 +116,12 @@ public class FailuresService {
                 return summarizeByPaAndAbfallId(failurelist);
         }
         throw new IllegalStateException("Invalid query type! " + params.getFailuresQueryType());
+    }
+
+    private List<FailureDto> convertToDto(List<Failure> failurelist) {
+        return failurelist.stream()
+                .map(failure -> modelMapper.map(failure, FailureDto.class))
+                .toList();
     }
 
     private List<FailureDto> summarizeByPaAndAbfallId(List<Failure> failurelist) {
@@ -126,7 +150,7 @@ public class FailuresService {
             case BY_PERSONAL:
                 throw new IllegalStateException("Invalid query type! " + params.getFailuresQueryType());
             case BY_TOP:
-//                összesített hibák, ah withStueckNr=true, akkorszabászai hibák, ahol a stueck_nr > 0,
+//                összesített hibák, ha withStueckNr=true, akkorszabászai hibák, ahol a stueck_nr > 0,
 //                ha withStueckNr=false akkor minősítési hibák, ahol stueckNr=0;
                 Prodauftrag prodauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(
                         params.getFirmaId(), params.getProdstufeId(), params.getPaNrId())

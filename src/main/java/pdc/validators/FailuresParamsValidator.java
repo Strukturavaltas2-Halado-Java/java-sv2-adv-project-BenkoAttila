@@ -11,8 +11,21 @@ public class FailuresParamsValidator {
         switch (params.getFailuresQueryType()) {
             case BY_TOP:
                 validateTopFailures(params);
+            case BY_FIRMA_ID:
+                if (params.getFirmaId() <= 0 || params.getProdstufeId() < 0 || params.getPaNrId() < 0) {
+                    throw new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId());
+                }
+                break;
+            case BY_FIRMA_ID_PRODSTUFE_ID:
+                if (params.getFirmaId() <= 0 || params.getProdstufeId() <= 0 || params.getPaNrId() < 0) {
+                    throw new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId());
+                }
+                break;
             case BY_PA_NR:
-                if (params.getFirmaId() <= 0 || params.getProdstufeId() <= 0 || params.getPaNrId() <= 0) {
+                if (params.getFirmaId() <= 0 || params.getProdstufeId() < 0 || params.getPaNrId() < 0) {
+                    throw new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId());
+                }
+                if (params.getPaNrId() > 0  && params.getProdstufeId() <= 0) {
                     throw new InvalidPANrException(params.getFirmaId(), params.getProdstufeId(), params.getPaNrId());
                 }
                 break;

@@ -55,11 +55,12 @@ public class FailuresController {
     @ResponseStatus(HttpStatus.OK)
     public List<FailureDto> findFailures(@RequestParam Optional<Integer> firmaId,
                                          @RequestParam Optional<Integer> prodstufeId,
-                                         @RequestParam Optional<Integer> paNrID,
+                                         @RequestParam Optional<Integer> paNrId,
                                          @RequestParam Optional<String> abfallId,
                                          @RequestParam Optional<String> withStueckNr,
                                          @RequestParam Optional<String> count) {
-        FailuresParams params = new FailuresParams(firmaId, prodstufeId, paNrID);
+        log.info(paNrId.toString());
+        FailuresParams params = new FailuresParams(firmaId, prodstufeId, paNrId);
         params.setTopParams(abfallId, withStueckNr, count);
         log.info("findFailures/top " + params.toString());
         new FailuresParamsValidator().validate(params);

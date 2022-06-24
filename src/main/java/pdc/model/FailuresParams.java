@@ -16,6 +16,7 @@ import static pdc.model.FailuresQueryType.*;
 @ToString
 public class FailuresParams {
     private final static int DEFAULT_COUNT = 3;
+    @Min(1)
     private int firmaId;
     private int prodstufeId;
     private int paNrId;
@@ -27,14 +28,16 @@ public class FailuresParams {
     private boolean withStueckNr;
     private int count;
 
-    private FailuresQueryType failuresQueryType;
+    private FailuresQueryType failuresQueryType = BY_PA_NR;
 
     public FailuresParams(Optional<Integer> optionalFirmaId, Optional<Integer> optionalProdstufeId, Optional<Integer> optionalPaNrId) {
         if (optionalFirmaId.isPresent()) {
             this.firmaId = optionalFirmaId.get();
+            failuresQueryType = BY_FIRMA_ID;
         }
         if (optionalProdstufeId.isPresent()) {
             this.prodstufeId = optionalProdstufeId.get();
+            failuresQueryType = BY_FIRMA_ID_PRODSTUFE_ID;
         }
         if (optionalPaNrId.isPresent()) {
             failuresQueryType = BY_PA_NR;
