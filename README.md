@@ -165,6 +165,6 @@ A 3. és 7. lekérdezés hibakódonként összesített dbszámot ad vissza (a 3.
 ## Technológiai részletek
 
 Háromrétegű alkalmazás (repository, service és controller rétegek) JPA Repository használatával, mariadb adatbázissal. Swagger UI felülettel, docker konténerizációs lehetőséggel.
-Az erp elérés mentett adatokból történő beolcvasással van helyettesítve.
+Az erp elérés mentett adatokból történő beolvasással van helyettesítve.
 
 ---
