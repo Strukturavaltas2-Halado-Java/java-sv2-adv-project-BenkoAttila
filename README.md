@@ -47,7 +47,6 @@ Az erp rendszer több céget kezel (nálunk két anyacég + a magyar leányváll
 az erp rendszer többféle gyártási folyamatot kezel, ezeket a prodstufe_id különbözteti meg. Pl nálunk az 50-es prodstufe_id a konfekcionálást jelenti,
 a 90-es pedig az autóipari szabányok szabását és minősítését. Az ezek szerinti bontás/csoportosítás a programban majd minden helyen megjelenik.
 
-![overview](doc/overview.drawio.png)
 
 ### Prodauftrag
 
@@ -166,6 +165,6 @@ A 3. és 7. lekérdezés hibakódonként összesített dbszámot ad vissza (a 3.
 ## Technológiai részletek
 
 Háromrétegű alkalmazás (repository, service és controller rétegek) JPA Repository használatával, mariadb adatbázissal. Swagger UI felülettel, docker konténerizációs lehetőséggel.
-Az erp elérés mentett adatokból történő betöltéssel van helyettesítve.
+Az erp elérés mentett adatokból történő beolcvasással van helyettesítve.
 
 ---
