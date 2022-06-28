@@ -1,6 +1,7 @@
 package pdc.failures;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,14 @@ import pdc.repositories.*;
 import pdc.services.ErpMasterFilesService;
 import pdc.services.ErpWorkOrdersService;
 
+import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -35,15 +39,20 @@ class ErpServiceIT {
 
     @BeforeEach
     void init() {
-//        Optional<ErpTransfer> last = service.findLastRunningTransfer();
-//        Optional<ErpTransfer> lastCompleted = service.findLastCompletedTransfer();
-//        if (lastCompleted.isEmpty()) {
-//            if (last.isEmpty()) {
-//                service.deleteAllTransfers();
-//                service.transferDataFromErp();
-//            }
-//            waitForTransferFinished();
-//        }
+        startTransferifNeccessary();
+    }
+
+    @Transactional
+    private void startTransferifNeccessary() {
+        Optional<ErpTransfer> last = service.findLastRunningTransfer();
+        Optional<ErpTransfer> lastCompleted = service.findLastCompletedTransfer();
+        if (lastCompleted.isEmpty()) {
+            if (last.isEmpty()) {
+                service.deleteAllTransfers();
+                service.transferDataFromErp();
+            }
+            waitForTransferFinished();
+        }
     }
 
     void waitForTransferFinished() {
@@ -57,6 +66,15 @@ class ErpServiceIT {
             lastCompleted = service.findLastCompletedTransfer();
         } while (lastCompleted.isEmpty() && LocalDateTime.now().isBefore(endOfWait));
         assertTrue(lastCompleted.isPresent());
+    }
+
+    @Test
+    void testCleanData() {
+//        service.cleanErpData();
+//        assertThat(service.listAllActiveEmployees(5)).hasSize(0);
+//        assertThat(service.listAllActiveWorkgroups(5)).hasSize(0);
+//        assertThat(service.listAllfailureCodes(2)).hasSize(0);
+//        assertThat(erpWorkOrdersService.listAllMatchingWorkorders(new WorkOrderParams(2, 0, 0))).hasSize(0);
     }
 
     @Test
@@ -97,14 +115,6 @@ class ErpServiceIT {
         assertEquals(69998, prodauftrag.getPaNrId());
         assertEquals(5, prodauftrag.getFirmaId());
         assertEquals(50, prodauftrag.getProdstufeId());
-    }
-
-    @Test
-    void testListAllActiveWorkorders() {
-        waitForTransferFinished();
-        WorkOrderParams param = new WorkOrderParams(-1, 0, 0);
-        List<ProdauftragDto> list = erpWorkOrdersService.listAllMatchingWorkorders(param);
-        list.forEach(System.out::println);
     }
 
     @Test

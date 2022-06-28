@@ -45,5 +45,16 @@ public class Prodauftrag {
         this.paNrId = paNrId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Prodauftrag that = (Prodauftrag) o;
+        return Objects.equals(firmaId, that.firmaId) && Objects.equals(prodstufeId, that.prodstufeId) && Objects.equals(paNrId, that.paNrId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(firmaId, prodstufeId, paNrId);
+    }
 }

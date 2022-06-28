@@ -132,15 +132,26 @@ public class ErpMasterFilesService {
         inactivateErpprodauftragen();
     }
 
+    @Transactional
     private void inactivateErpprodauftragen() {
-        prodauftragRepository.inactivateAll();
+        List<Prodauftrag> list = prodauftragRepository.findAll();
+        for (Prodauftrag prodauftrag : list) {
+            prodauftrag.setAktiv(false);
+        }
+//        prodauftragRepository.inactivateAll();
     }
 
+    @Transactional
     private void inactivatSchichtplangruppen() {
-        schichtplangruppeRepository.inactivateAll();
+        List<Schichtplangruppe> list = schichtplangruppeRepository.findAll();
+        for (Schichtplangruppe schichtplangruppe : list) {
+            schichtplangruppe.setAktiv(false);
+
+        }
+//        schichtplangruppeRepository.inactivateAll();
     }
 
-    void saveProdauftragFromErp() {
+    private void saveProdauftragFromErp() {
         List<pdc.erp.model.Prodauftrag> list = erpProdauftragRepositoryDouble.findAll().toList();
         for (pdc.erp.model.Prodauftrag actual : list) {
             Prodauftrag prodauftrag = null;
@@ -162,7 +173,7 @@ public class ErpMasterFilesService {
         }
     }
 
-@Transactional
+    @Transactional
     public void saveProdauftragbuendelFromErp() {
         int count = 0;
         List<pdc.erp.model.Prodauftragbuendel> list = erpProdauftragbuendelRepositoryDouble.findAll().toList();
@@ -200,28 +211,36 @@ public class ErpMasterFilesService {
         }
     }
 
+    @Transactional
     void inactivatePersonal() {
-        personalRepository.inactivateAll();
+        List<Personal> list = personalRepository.findAll();
+        for (Personal personal : list) {
+            personal.setAktiv(false);
+        }
+//        personalRepository.inactivateAll();
     }
 
     public void savePersonalFromErp() {
         List<pdc.erp.model.Personal> list = erpPersonalRepositoryDouble.findAll(5).toList();
         for (pdc.erp.model.Personal actual : list) {
+            log.info(actual.toString());
             Personal personal;
             Optional<Personal> optionalPersonal = personalRepository.findById(actual.getPersonalId());
             if (optionalPersonal.isPresent()) {
+                log.info(String.format("Personal found: %d", actual.getPersonalId()));
                 personal = optionalPersonal.get();
                 personal.setFirmaId(actual.getFirmaId());
                 personal.setPersName(actual.getPersName());
                 personal.setAktiv(actual.isAktiv());
 
             } else {
+                log.info(String.format("Personal not found: %d", actual.getPersonalId()));
                 personal = new Personal(actual.getPersonalId());
                 personal.setFirmaId(actual.getFirmaId());
                 personal.setPersName(actual.getPersName());
                 personal.setAktiv(actual.isAktiv());
-                personalRepository.save(personal);
             }
+            personalRepository.save(personal);
         }
     }
 
@@ -273,7 +292,7 @@ public class ErpMasterFilesService {
 
 
     public List<PersonalDto> listAllActiveEmployees(int firmaId) {
-        return personalRepository.findAllByFirmaId(firmaId).stream()
+        return personalRepository.findByFirmaIdEqualsAndAktivIsTrue(firmaId).stream()
                 .map(sg -> modelMapper.map(sg, PersonalDto.class))
                 .toList();
     }

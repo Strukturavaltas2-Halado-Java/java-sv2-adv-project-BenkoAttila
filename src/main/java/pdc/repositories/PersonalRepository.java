@@ -14,7 +14,11 @@ public interface PersonalRepository extends JpaRepository<Personal, Integer> {
     @Transactional
     @Query(value="update erppersonals set aktiv=false", nativeQuery= true)
     void inactivateAll();
+//
+//    @Query("select p from Personal p where aktiv=1 and firma_id=:firmaId")
+//    List<Personal> findAllByFirmaId(int firmaId);
 
-    @Query("select p from Personal p where aktiv=1 and firma_id=:firmaId")
-    List<Personal> findAllByFirmaId(int firmaId);
+    List<Personal> findByFirmaIdEqualsAndAktivIsTrue(int firmaId);
+
+
 }

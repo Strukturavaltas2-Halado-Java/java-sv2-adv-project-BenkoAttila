@@ -8,12 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pdc.dtos.*;
+import pdc.model.ErpTransfer;
 import pdc.services.ErpWorkOrdersService;
 import pdc.services.ErpMasterFilesService;
 import pdc.model.WorkOrderParams;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Sql(statements = {"delete from failures"})
 @Slf4j
 class FailuresControllerIT {
+    private static final int TRANSFER_WAIT_MINUTES = 5;
     @Autowired
     WebTestClient webtestClient;
 
@@ -52,6 +55,32 @@ class FailuresControllerIT {
         abfallcode1 = failurecodes.get(0);
         abfallcode2 = failurecodes.get(1);
         abfallcode3 = failurecodes.get(2);
+        startTransferIfNeccessary();
+    }
+
+    private void startTransferIfNeccessary() {
+        Optional<ErpTransfer> last = erpMasterFilesService.findLastRunningTransfer();
+        Optional<ErpTransfer> lastCompleted = erpMasterFilesService.findLastCompletedTransfer();
+        if (lastCompleted.isEmpty()) {
+            if (last.isEmpty()) {
+                erpMasterFilesService.deleteAllTransfers();
+                erpMasterFilesService.transferDataFromErp();
+            }
+            waitForTransferFinished();
+        }
+    }
+
+    void waitForTransferFinished() {
+        Optional<ErpTransfer> last = erpMasterFilesService.findLastRunningTransfer();
+        LocalDateTime endOfWait = LocalDateTime.now().plusMinutes(TRANSFER_WAIT_MINUTES);
+        if (last.isPresent()) {
+            endOfWait = last.get().getStartedAt().plusMinutes(TRANSFER_WAIT_MINUTES);
+        }
+        Optional<ErpTransfer> lastCompleted;
+        do {
+            lastCompleted = erpMasterFilesService.findLastCompletedTransfer();
+        } while (lastCompleted.isEmpty() && LocalDateTime.now().isBefore(endOfWait));
+        assertTrue(lastCompleted.isPresent());
     }
 
     void addTestFailures() {
@@ -273,14 +302,11 @@ class FailuresControllerIT {
         command.setPersonalQc(personalQc.getPersonalId());
         command.setAbfallId(abfallcode1.getAbfallId());
 
-        FailureDto actual = webtestClient.post()
+        webtestClient.post()
                 .uri("/api/failuresv2")
                 .bodyValue(command)
                 .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(FailureDto.class)
-                .returnResult()
-                .getResponseBody();
+                .expectStatus().isNotFound();
     }
 
     @Test

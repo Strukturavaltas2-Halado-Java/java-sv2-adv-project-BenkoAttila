@@ -13,8 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ProdauftragRepository extends JpaRepository<Prodauftrag, Long> {
     @Modifying
-    @Transactional
-    @Query(value="update erpprodauftragen set aktiv = 0", nativeQuery= true)
+    @Query(value="update Prodauftrag set aktiv = false")
     void inactivateAll();
 //    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and aktiv=:aktiv")
     List<Prodauftrag> findByFirmaIdAndAktiv(int firmaId, boolean aktiv);
@@ -29,4 +28,6 @@ public interface ProdauftragRepository extends JpaRepository<Prodauftrag, Long> 
     Optional<Prodauftrag> getByFirmaIdAndProdstufeIdAndPaNrId(int firmaId, int prodstufeId, int paNrId);
 //    @Query(value="select p from Prodauftrag p where aktiv=:aktiv and firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
     Optional<Prodauftrag> getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(int firmaId, int prodstufeId, int paNrId, boolean aktiv);
+
+
 }
