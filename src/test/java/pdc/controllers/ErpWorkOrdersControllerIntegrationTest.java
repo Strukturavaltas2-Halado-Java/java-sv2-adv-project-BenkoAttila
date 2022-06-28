@@ -1,5 +1,6 @@
 package pdc.controllers;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +9,7 @@ import pdc.dtos.ProdauftragDto;
 import pdc.model.Abfallcode;
 import pdc.model.Prodauftrag;
 import pdc.model.WorkOrderParams;
+import pdc.services.ErpMasterFilesService;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class ErpWorkOrdersControllerIntegrationTest {
     @Autowired
     WebTestClient webTestClient;
-    
+
+    @Autowired
+    ErpMasterFilesService erpMasterFilesService;
+
+    @BeforeEach
+    void init() {
+        erpMasterFilesService.transferDataFromErp();
+    }
+
 @Test
     void listAllWorkordersByFirmaId2() {
     List<Prodauftrag> list = webTestClient.get()
