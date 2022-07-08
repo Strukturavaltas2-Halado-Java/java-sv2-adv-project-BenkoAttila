@@ -45,6 +45,7 @@ class FailuresControllerIT {
 
     @BeforeEach
     void init() {
+        startTransferIfNeccessary();
         List<ProdauftragDto> list = erpWorkOrdersService.listAllMatchingWorkorders(new WorkOrderParams(5, 50, 0));
         testProdauftrag = list.get(0);
         List<PersonalDto> personals = erpMasterFilesService.listAllActiveEmployees(5);
@@ -55,7 +56,6 @@ class FailuresControllerIT {
         abfallcode1 = failurecodes.get(0);
         abfallcode2 = failurecodes.get(1);
         abfallcode3 = failurecodes.get(2);
-        startTransferIfNeccessary();
     }
 
     private void startTransferIfNeccessary() {

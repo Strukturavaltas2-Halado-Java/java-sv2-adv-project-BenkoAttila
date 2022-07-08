@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pdc.dtos.ProdauftragDto;
-import pdc.model.Abfallcode;
+import pdc.model.ErpTransfer;
 import pdc.model.Prodauftrag;
-import pdc.model.WorkOrderParams;
 import pdc.services.ErpMasterFilesService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ErpWorkOrdersControllerIntegrationTest {
+class ErpWorkOrdersControllerIT {
+    private static final int TRANSFER_WAIT_MINUTES = 5;
     @Autowired
     WebTestClient webTestClient;
 
@@ -28,8 +29,21 @@ class ErpWorkOrdersControllerIntegrationTest {
     @BeforeEach
     void init() {
         erpMasterFilesService.transferDataFromErp();
+        waitForTransferFinished();
     }
 
+    void waitForTransferFinished() {
+        Optional<ErpTransfer> last = erpMasterFilesService.findLastRunningTransfer();
+        LocalDateTime endOfWait = LocalDateTime.now().plusMinutes(TRANSFER_WAIT_MINUTES);
+        if (last.isPresent()) {
+            endOfWait = last.get().getStartedAt().plusMinutes(TRANSFER_WAIT_MINUTES);
+        }
+        Optional<ErpTransfer> lastCompleted;
+        do {
+            lastCompleted = erpMasterFilesService.findLastCompletedTransfer();
+        } while (lastCompleted.isEmpty() && LocalDateTime.now().isBefore(endOfWait));
+        assertTrue(lastCompleted.isPresent());
+    }
 @Test
     void listAllWorkordersByFirmaId2() {
     List<Prodauftrag> list = webTestClient.get()

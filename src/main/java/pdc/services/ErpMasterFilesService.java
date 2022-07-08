@@ -298,7 +298,7 @@ public class ErpMasterFilesService {
     }
 
     public List<SchichtplangruppeDto> listAllActiveWorkgroups(int firmaId) {
-        return schichtplangruppeRepository.findAllByFirmaId(firmaId).stream()
+        return schichtplangruppeRepository.findByFirmaIdIsAndAktivTrue(firmaId).stream()
                 .map(sg -> modelMapper.map(sg, SchichtplangruppeDto.class))
                 .toList();
     }
