@@ -24,10 +24,8 @@ public interface ProdauftragRepository extends JpaRepository<Prodauftrag, Long> 
 //    @Query(value="select p from Prodauftrag p where firmaId=:firmaId and prodstufeId=:prodstufeId and paNrId=:paNrId")
     Optional<Prodauftrag> findByFirmaIdAndProdstufeIdAndPaNrId(int firmaId, int prodstufeId, int paNrId);
 
-//    @Query(value="select p from Prodauftrag p where firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
-    Optional<Prodauftrag> getByFirmaIdAndProdstufeIdAndPaNrId(int firmaId, int prodstufeId, int paNrId);
 //    @Query(value="select p from Prodauftrag p where aktiv=:aktiv and firma_id=:firmaId and prodstufe_id=:prodstufeId and pa_nr_id=:paNrId")
-    Optional<Prodauftrag> getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(int firmaId, int prodstufeId, int paNrId, boolean aktiv);
+    Optional<Prodauftrag> findByFirmaIdAndProdstufeIdAndPaNrIdAndAktivIsTrue(int firmaId, int prodstufeId, int paNrId);
 
 
 }

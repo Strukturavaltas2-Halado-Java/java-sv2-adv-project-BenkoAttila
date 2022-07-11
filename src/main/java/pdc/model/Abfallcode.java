@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "erpabfallcodes", indexes = @Index(name= "erppk", columnList = "firma_id,prodstufe_id,abfall_id"))
@@ -30,5 +31,18 @@ public class Abfallcode {
         this.firmaId = firmaId;
         this.prodstufeId = prodstufeId;
         this.abfallId = abfallId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Abfallcode that = (Abfallcode) o;
+        return Objects.equals(firmaId, that.firmaId) && Objects.equals(prodstufeId, that.prodstufeId) && Objects.equals(abfallId, that.abfallId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firmaId, prodstufeId, abfallId);
     }
 }

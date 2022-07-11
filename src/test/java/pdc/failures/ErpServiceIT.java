@@ -51,30 +51,7 @@ class ErpServiceIT {
                 service.deleteAllTransfers();
                 service.transferDataFromErp();
             }
-            waitForTransferFinished();
         }
-    }
-
-    void waitForTransferFinished() {
-        Optional<ErpTransfer> last = service.findLastRunningTransfer();
-        LocalDateTime endOfWait = LocalDateTime.now().plusMinutes(TRANSFER_WAIT_MINUTES);
-        if (last.isPresent()) {
-            endOfWait = last.get().getStartedAt().plusMinutes(TRANSFER_WAIT_MINUTES);
-        }
-        Optional<ErpTransfer> lastCompleted;
-        do {
-            lastCompleted = service.findLastCompletedTransfer();
-        } while (lastCompleted.isEmpty() && LocalDateTime.now().isBefore(endOfWait));
-        assertTrue(lastCompleted.isPresent());
-    }
-
-    @Test
-    void testCleanData() {
-//        service.cleanErpData();
-//        assertThat(service.listAllActiveEmployees(5)).hasSize(0);
-//        assertThat(service.listAllActiveWorkgroups(5)).hasSize(0);
-//        assertThat(service.listAllfailureCodes(2)).hasSize(0);
-//        assertThat(erpWorkOrdersService.listAllMatchingWorkorders(new WorkOrderParams(2, 0, 0))).hasSize(0);
     }
 
     @Test
@@ -85,7 +62,6 @@ class ErpServiceIT {
 
     @Test
     void testTransferAndListAllActiveAbfallcodes() {
-        waitForTransferFinished();
         List<AbfallcodeDto> list2 = service.listAllfailureCodes(2);
         List<AbfallcodeDto> list5 = service.listAllfailureCodes(5);
         assertEquals(50, list2.size());
@@ -94,7 +70,6 @@ class ErpServiceIT {
 
     @Test
     void testTransferAndListAllActiveProdauftrag() {
-        waitForTransferFinished();
         List<ProdauftragDto> list2 = erpWorkOrdersService.listAllMatchingWorkorders(new WorkOrderParams(2, 0, 0));
         List<ProdauftragDto> list5 = erpWorkOrdersService.listAllMatchingWorkorders(new WorkOrderParams(5, 0, 0));
         assertEquals(155, list2.size());
@@ -103,14 +78,12 @@ class ErpServiceIT {
 
     @Test
     void testTransferAndListAllActiveSchichtplangruppe() {
-        waitForTransferFinished();
         List<SchichtplangruppeDto> list5 = service.listAllActiveWorkgroups(5);
         assertEquals(51, list5.size());
     }
 
     @Test
     void testFindByFirmaIdAndProdstufeIdAndPaNrId() {
-        waitForTransferFinished();
         ProdauftragDto prodauftrag = erpWorkOrdersService.findWorkorder(new WorkOrderParams(5, 50, 69998));
         assertEquals(69998, prodauftrag.getPaNrId());
         assertEquals(5, prodauftrag.getFirmaId());
@@ -119,7 +92,6 @@ class ErpServiceIT {
 
     @Test
     void testListAllActiveWorkordersByStueckNrBc() {
-        waitForTransferFinished();
         WorkOrderParams param = new WorkOrderParams(5, 0, 0);
         param.setStueckNrBc(Optional.of("4846581/11"));
         List<ProdauftragDto> list = erpWorkOrdersService.listAllMatchingWorkorders(param);
@@ -129,7 +101,6 @@ class ErpServiceIT {
 
     @Test
     void testListAllActiveWorkordersByBuendel() {
-        waitForTransferFinished();
         WorkOrderParams param = new WorkOrderParams(5, 50, 0);
         param.setStapelBuendel(Optional.of("102191"), Optional.of("1"), Optional.of("1"), Optional.of("0"));
         List<ProdauftragDto> list = erpWorkOrdersService.listAllMatchingWorkorders(param);

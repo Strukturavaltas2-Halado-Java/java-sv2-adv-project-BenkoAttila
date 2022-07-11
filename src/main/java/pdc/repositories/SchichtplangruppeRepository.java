@@ -11,13 +11,13 @@ import java.util.Collection;
 import java.util.List;
 
 public interface SchichtplangruppeRepository extends JpaRepository<Schichtplangruppe, Integer> {
-    @Modifying
-    @Transactional
-    @Query(value="update erpschichtplangruppen set aktiv = 0", nativeQuery= true)
-    void inactivateAll();
+//    @Modifying
+//    @Transactional
+//    @Query(value="update erpschichtplangruppen set aktiv = 0", nativeQuery= true)
+//    void inactivateAll();
 //    @Query(value = "select s from Schichtplangruppe s where firma_id=:firmaId and aktiv=1")
 //    Collection<Schichtplangruppe> findAllByFirmaId(int firmaId);
 
-    List<Schichtplangruppe> findByFirmaIdIsAndAktivTrue(int firmaId);
+    List<Schichtplangruppe> findByFirmaIdAndAktivIsTrue(int firmaId);
 
 }

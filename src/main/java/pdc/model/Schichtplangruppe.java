@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "erpschichtplangruppen")
@@ -30,4 +31,16 @@ public class Schichtplangruppe {
         this.schichtplangruppeId = schichtplangruppeId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Schichtplangruppe that = (Schichtplangruppe) o;
+        return schichtplangruppeId == that.schichtplangruppeId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(schichtplangruppeId);
+    }
 }

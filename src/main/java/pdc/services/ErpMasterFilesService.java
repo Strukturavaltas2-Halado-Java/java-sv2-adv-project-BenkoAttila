@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,7 +48,9 @@ public class ErpMasterFilesService {
 
 
     public List<AbfallcodeDto> listAllfailureCodes(int companyId) {
-        return erpAbfallcodeRepository.findAll().filter(abfallcode -> abfallcode.getFirmaId() == companyId).map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDto.class)).toList();
+        return abfallcodeRepository.findByFirmaIdAndAktivTrue(companyId).stream()
+                .map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDto.class))
+                .toList();
     }
 
     public List<ErpTransferDto> listAllErpTransfers() {
@@ -110,10 +113,10 @@ public class ErpMasterFilesService {
 
     @Transactional
     public void saveErpData(Integer currentTransferId) {
-        cleanErpData();
+//        cleanErpData();
+        savePersonalFromErp();
         saveAbfallCodeFromErp();
         saveProdauftragFromErp();
-        savePersonalFromErp();
         saveSchichtlplangruppeFromErp();
         saveLagerbestFromErp();
         saveProdauftragbuendelFromErp();
@@ -122,17 +125,15 @@ public class ErpMasterFilesService {
         }
     }
 
-    @Transactional
     public void cleanErpData() {
-        inactivateAbfallCodes();
-        inactivatePersonal();
-        lagerbestRepository.deleteAll();
-        inactivatSchichtplangruppen();
-        prodauftragbuendelRepository.deleteAll();
-        inactivateErpprodauftragen();
+//        inactivateAbfallCodes();
+//        inactivatePersonal();
+//        lagerbestRepository.deleteAll();
+//        inactivatSchichtplangruppen();
+//        prodauftragbuendelRepository.deleteAll();
+//        inactivateErpprodauftragen();
     }
 
-    @Transactional
     private void inactivateErpprodauftragen() {
         List<Prodauftrag> list = prodauftragRepository.findAll();
         for (Prodauftrag prodauftrag : list) {
@@ -141,7 +142,6 @@ public class ErpMasterFilesService {
 //        prodauftragRepository.inactivateAll();
     }
 
-    @Transactional
     private void inactivatSchichtplangruppen() {
         List<Schichtplangruppe> list = schichtplangruppeRepository.findAll();
         for (Schichtplangruppe schichtplangruppe : list) {
@@ -152,10 +152,11 @@ public class ErpMasterFilesService {
     }
 
     private void saveProdauftragFromErp() {
+        inactivateErpprodauftragen();
         List<pdc.erp.model.Prodauftrag> list = erpProdauftragRepositoryDouble.findAll().toList();
         for (pdc.erp.model.Prodauftrag actual : list) {
             Prodauftrag prodauftrag = null;
-            Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
+            Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrId(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             if (optionalProdauftrag.isEmpty()) {
                 prodauftrag = new Prodauftrag(actual.getFirmaId(), actual.getProdstufeId(), actual.getPaNrId());
             } else {
@@ -173,8 +174,8 @@ public class ErpMasterFilesService {
         }
     }
 
-    @Transactional
     public void saveProdauftragbuendelFromErp() {
+        prodauftragbuendelRepository.deleteAll();
         int count = 0;
         List<pdc.erp.model.Prodauftragbuendel> list = erpProdauftragbuendelRepositoryDouble.findAll().toList();
         for (pdc.erp.model.Prodauftragbuendel actual : list) {
@@ -195,6 +196,7 @@ public class ErpMasterFilesService {
     }
 
     void saveSchichtlplangruppeFromErp() {
+        inactivatSchichtplangruppen();
         List<pdc.erp.model.Schichtplangruppe> list = erpSchichtplangruppeRepositoryDouble.findAll(5).toList();
         for (pdc.erp.model.Schichtplangruppe actual : list) {
             Schichtplangruppe schichtplangruppe;
@@ -211,7 +213,6 @@ public class ErpMasterFilesService {
         }
     }
 
-    @Transactional
     void inactivatePersonal() {
         List<Personal> list = personalRepository.findAll();
         for (Personal personal : list) {
@@ -220,7 +221,10 @@ public class ErpMasterFilesService {
 //        personalRepository.inactivateAll();
     }
 
+    @Transactional
     public void savePersonalFromErp() {
+        log.info("savePersonalFromErp");
+        inactivatePersonal();
         List<pdc.erp.model.Personal> list = erpPersonalRepositoryDouble.findAll(5).toList();
         for (pdc.erp.model.Personal actual : list) {
             log.info(actual.toString());
@@ -246,6 +250,7 @@ public class ErpMasterFilesService {
 
 
     public void saveLagerbestFromErp() {
+        lagerbestRepository.deleteAll();
         List<pdc.erp.model.Lagerbestdetail> list = erpLagerbestRepository.findAllDetail().toList();
         for (pdc.erp.model.Lagerbestdetail actual : list) {
             System.out.println(actual);
@@ -263,10 +268,15 @@ public class ErpMasterFilesService {
     }
 
     private void inactivateAbfallCodes() {
-        abfallcodeRepository.inactivateAll();
+        List<Abfallcode> list = abfallcodeRepository.findAll();
+        for (Abfallcode abfallcode : list) {
+            abfallcode.setAktiv(false);
+        }
+//        abfallcodeRepository.inactivateAll();
     }
 
     void saveAbfallCodeFromErp() {
+        inactivateAbfallCodes();
         List<pdc.erp.model.Abfallcode> list = erpAbfallcodeRepository.findAll().toList();
         for (pdc.erp.model.Abfallcode actual : list) {
             Abfallcode abfallcode;
@@ -284,7 +294,7 @@ public class ErpMasterFilesService {
     }
 
     public List<AbfallcodeDto> listAllActivefailurecodes(int firmaId) {
-        return abfallcodeRepository.findByFirmaWithAktivTrue(firmaId, true)
+        return abfallcodeRepository.findByFirmaIdAndAktivTrue(firmaId)
                 .stream()
                 .map(abfallcode -> modelMapper.map(abfallcode, AbfallcodeDto.class))
                 .toList();
@@ -298,7 +308,7 @@ public class ErpMasterFilesService {
     }
 
     public List<SchichtplangruppeDto> listAllActiveWorkgroups(int firmaId) {
-        return schichtplangruppeRepository.findByFirmaIdIsAndAktivTrue(firmaId).stream()
+        return schichtplangruppeRepository.findByFirmaIdAndAktivIsTrue(firmaId).stream()
                 .map(sg -> modelMapper.map(sg, SchichtplangruppeDto.class))
                 .toList();
     }

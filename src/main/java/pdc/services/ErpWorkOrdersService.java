@@ -21,7 +21,6 @@ import java.util.Optional;
 @Service
 @Validated
 @RequiredArgsConstructor
-@Slf4j
 public class ErpWorkOrdersService {
     private static final int WAIT_BEFORE_NEW_COPY = 90;
     private static final int COPY_TIMEOUT = 5;
@@ -48,7 +47,6 @@ public class ErpWorkOrdersService {
 
 
     public List<ProdauftragDto> listAllMatchingWorkorders(@Valid WorkOrderParams param) {
-        log.info(param.toString());
         switch (param.getFilterType()) {
             case BY_NR:
                 if (param.getPaNrId() > 0) {
@@ -67,11 +65,9 @@ public class ErpWorkOrdersService {
                 }
             case BY_BUENDEL:
                 List<Prodauftragbuendel> pabuendellist = prodauftragbuendelRepository.listaAllByStapelIdAndBuendel1AndBuendel2AndBuendel3(param.getStapelId(), param.getBuendel1(), param.getBuendel2(), param.getBuendel3());
-                pabuendellist.forEach(p -> log.info(p.toString()));
                 return pabuendellist.stream()
                         .map(prodauftragbuendel -> modelMapper.map(prodauftragbuendel.getProdauftrag(), ProdauftragDto.class)).toList();
             case BY_STUECK_NR:
-                log.info(String.format("%d, %d", param.getStueckNr(), param.getStueckTeilung()));
                 List<Lagerbestdetail> lbdlist = lagerbestRepository.findByStueckNrEqualsAndStueckTeilungEquals(param.getStueckNr(), param.getStueckTeilung());
                 return lbdlist.stream()
                         .map(lagerbestdetail -> modelMapper.map(lagerbestdetail.getProdauftrag(), ProdauftragDto.class)).toList();
@@ -81,8 +77,7 @@ public class ErpWorkOrdersService {
     }
 
     public ProdauftragDto findWorkorder(WorkOrderParams param) {
-        log.info(param.toString());
-        Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.getByFirmaIdAndProdstufeIdAndPaNrIdAndAktiv(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId(), true);
+        Optional<Prodauftrag> optionalProdauftrag = prodauftragRepository.findByFirmaIdAndProdstufeIdAndPaNrIdAndAktivIsTrue(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId());
         if (optionalProdauftrag.isEmpty() || !optionalProdauftrag.get().isAktiv()) {
             throw new ProdauftragNotFoundException(param.getFirmaId(), param.getProdstufeId(), param.getPaNrId());
         }
